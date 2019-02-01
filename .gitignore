@@ -1,0 +1,105 @@
+﻿#####
+#  Temp/ ------ THIS LINE MAKE ANY FOLDER NAMED 'Temp' getting ignored !!!
+#  ref: https://github.com/github/gitignore/blob/master/Unity.gitignore
+#####
+# =============== #
+# Unity generated #
+# =============== #
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/Assets/AssetStoreTools* 
+/Logs/
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+*.svd
+*.userprefs
+# need some csproj
+/*.csproj
+*.pidb
+*.suo
+# need some sln
+/*.sln
+*.user
+*.unityproj
+*.booproj
+ 
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+#Icon?
+ehthumbs.db
+Thumbs.db
+AssetBundles/
+Resources_bak/
+
+# ============ #
+# Misc         #
+# ============ #
+/.vs/**
+/Tools/Obfuscation/**/*.dll
+/Tools/Obfuscation/**/*.log
+/Assets/FullInspector2_Generated/fiPersistentEditorStorage.prefab
+/Assets/FullInspector2_Generated/fiPersistentEditorStorage.prefab.meta
+/Assets/FullInspector2_Generated/fiBackupStorage.prefab
+/Assets/FullInspector2_Generated/fiBackupStorage.prefab.meta
+/Assets/Temp/**.*
+/Assets/Temp.meta
+/AutoBuild/
+/Compiler/**
+/Assets/Editor/CompilerSettings.*
+/Assets/Editor/CompilerPlugin.*
+/Assets/ETC+Alpha*
+
+**/.vs/
+**/bin/
+**/obj/
+
+
+
+# ============ #
+# Wwise        #
+# ============ #
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Windows/
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/iOS/
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Mac/
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Android/
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Windows.meta
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/iOS.meta
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Mac.meta
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/Android.meta
+*.validationcache
+/WwiseProj/ProfilingSession*.prof
+/WwiseProj/.cache
+/WwiseProj/WwiseProj.*.wsettings
+/WwiseProj/WwiseProj.*.validationcache
+
+# ============ #
+#SDKPJ         #
+# ============ #
+/Miscs/android/forChannelSDK/AndroidSDKSample/Assets/Plugins/
+
+
+
+
+
+Assets/uimodscene.meta
+Assets/uimodscene/
+
+#because ProjectVersion.txt may be different, so
+/ProjectSettings/ProjectVersion.txt
+*.code-workspace
+*.code-workspace.meta
+*.licenseheader
+
+Assets/StreamingAssets
