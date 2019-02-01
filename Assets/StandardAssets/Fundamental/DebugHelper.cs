@@ -11,17 +11,20 @@ namespace Fundamental
 		public static bool[] DEBUG_SWITCH =
 		{
 			true,		// Default		0
-			true		// Expression	1
+			true,		// Expression	1
+			true		// Network		2
 	};
 
 		public static string[] LOG_PREFIX =
 		{
 			"DEFAULT:",
-			"EXPRESSION:"
+			"EXPRESSION:",
+			"NETWORK:"
 	};
 
 		public const int DEFAULT = 0;
 		public const int EXPRESSION = 1;
+		public const int NETWORK = 2;
 
 		public static void Assert(bool InCondition)
 		{
