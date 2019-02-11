@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 /*
  *  2015/02/01
@@ -29,12 +26,12 @@ namespace Net
 		 *  输出:
 		 *      成功返回true
 		 */
-		bool connect(string host, ushort port, int timeout_ms = 2000);
+		bool Connect(string host, ushort port, int timeout_ms = 2000);
 
 		/*
 		 *  功能:主动断开连接(主动正常断开连接，不会调用设置的回调函数)
 		 */
-		void disconnect();
+		void Disconnect();
 
 		/*
 		 * 功能:判断连接状态
@@ -42,7 +39,7 @@ namespace Net
 		 * 输出:
 		 *      连接正常时返回true，否则返回false
 		 */
-		bool isConnected();
+		bool IsConnected();
 
 		/*
 		 *  功能: 同步阻塞的方式发送一个packet到服务器，最大阻塞时间等于connect()时传入的timeout
@@ -53,7 +50,7 @@ namespace Net
 		 *  输出:
 		 *      成功返回true
 		 */
-		bool send(NetPacket packet);
+		bool Send(NetPacket packet);
 
 		/*
 		 *  功能: 从已收到的消息队列中，pop一个packet并返回
@@ -65,7 +62,7 @@ namespace Net
 		 *  输出: 
 		 *      成功时返回一个实例，否则返回null
 		 */
-		NetPacket recv(int timeout_ms = 0);
+		NetPacket Recv(int timeout_ms = 0);
 
 		/*
 		 * 功能: 设置连接意外断开时(网络故障、服务器主动关闭等)的回调函数, 由MiClient线程调用
@@ -74,7 +71,7 @@ namespace Net
 		 *      Callback callback   等于null时表示取消回调
 		 *      
 		 */
-		void setDisconnectCallback(Action callback);
+		void SetDisconnectCallback(Action callback);
 
 		/*
 		 *  功能: 设置发往服务器的心跳包
@@ -86,6 +83,6 @@ namespace Net
 		 *  输出:
 		 *      成功时返回true
 		 */
-		bool setKeepalive(int time_ms, NetPacket packet);
+		bool SetKeepalive(int time_ms, NetPacket packet);
 	}
 }

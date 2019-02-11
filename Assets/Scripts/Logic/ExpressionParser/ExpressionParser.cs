@@ -28,8 +28,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Fundamental;
 
-namespace Fundamental
+namespace Logic.EP
 {
 	public interface IValue
 	{

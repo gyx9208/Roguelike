@@ -47,10 +47,6 @@ namespace Net
 	 */
 	public class NetPacket
 	{
-		/*
-		 *  数据包变量结构
-		 */
-
 		// 数据包，存储一个序列化后的PROTOBUF实例
 		private MemoryStream _bodyMem;
 		private MemoryStream _sessionMem;
@@ -62,19 +58,12 @@ namespace Net
 		int _thisLength;
 		ushort _cmdId;
 
-		/*
-		 *  构造函数  
-		 */
 		public NetPacket()
 		{
 			_bodyMem = new MemoryStream();
 			_sessionMem = new MemoryStream();
 			_hasHead = false;
 		}
-
-		/*
-		 *  一系列GET方法  
-		 */
 		public ushort GetCmdId()
 		{
 			return _cmdId;
@@ -119,12 +108,12 @@ namespace Net
 			return _session;
 		}
 
-		public System.Object getData()
+		public System.Object GetData()
 		{
 			return _content;
 		}
 
-		public bool setData<T>(T data, PacketSession session)
+		public bool SetData<T>(T data, PacketSession session)
 		{
 			try
 			{
@@ -146,7 +135,7 @@ namespace Net
 
 				_bodyMem.Seek(NetDefine.CMD_BYTES, SeekOrigin.Begin);
 
-				_bodyMem.Write(NetUtils.UshortToBigEndian((ushort)(sessionPos - NetDefine.BODY_HEAD_LEN)),0,NetDefine.SESSION_LEN_BYTES);
+				_bodyMem.Write(NetUtils.UshortToBigEndian((ushort)(sessionPos - NetDefine.BODY_HEAD_LEN)), 0, NetDefine.SESSION_LEN_BYTES);
 				_bodyMem.Write(NetUtils.UintToBigEndian((uint)(contentPos - sessionPos)), 0, NetDefine.CONTENT_LEN_BYTES);
 
 				//OutputBytes("true data:", body_.GetBuffer(), body_.Length);
@@ -160,10 +149,7 @@ namespace Net
 			return true;
 		}
 
-		/*
-		 *  序列化数据
-		 */
-		public void serialize(ref MemoryStream ms)
+		public void Serialize(ref MemoryStream ms)
 		{
 			// 清空ms
 			ms.SetLength(0);
@@ -174,7 +160,7 @@ namespace Net
 
 			while (length > 0)
 			{
-				int index = (length-1) / NetDefine.PACKET_MAX_BYTES;
+				int index = (length - 1) / NetDefine.PACKET_MAX_BYTES;
 				int thisLen = Math.Min(length, NetDefine.PACKET_MAX_BYTES);
 				length = length - thisLen;
 				ms.Write(NetUtils.UshortToBigEndian((ushort)(thisLen + NetDefine.PACKET_SUB_HEAD_LEN)), 0, 2);
@@ -185,16 +171,16 @@ namespace Net
 				_bodyMem.Read(thisdata, 0, thisLen);
 				ms.Write(thisdata, 0, thisLen);
 			}
+
 			//OutputBytes("Send: ", ms.GetBuffer(), ms.Length);
 		}
 
 
 		byte _thisIndex;
 		/*
-		 * 反序列化 
 		 * used = 这次反序列化用掉的数据长度
 		 */
-		public PacketStatus deserialize(ref byte[] buf, ref int used, int total)
+		public PacketStatus Deserialize(ref byte[] buf, ref int used, int total)
 		{
 			if (null == buf)
 			{
@@ -210,7 +196,7 @@ namespace Net
 					_thisLength -= writeCount;
 					used += writeCount;
 
-					if(_thisLength ==0)
+					if (_thisLength == 0)
 					{
 						if (_thisIndex == 0)
 						{
@@ -225,9 +211,9 @@ namespace Net
 					}
 				}
 
-				if(!_hasHead)
+				if (!_hasHead)
 				{
-					if(total - used < NetDefine.PACKET_HEAD_LEN)
+					if (total - used < NetDefine.PACKET_HEAD_LEN)
 					{
 						return PacketStatus.PACKET_NOT_COMPLETE;
 					}
@@ -235,7 +221,7 @@ namespace Net
 					{
 						_hasHead = true;
 						_thisLength = NetUtils.BigEndianToUshort(buf, used) - NetDefine.PACKET_SUB_HEAD_LEN;
-						_thisIndex = buf[used+3];
+						_thisIndex = buf[used + 3];
 						used += NetDefine.PACKET_HEAD_LEN;
 					}
 				}
@@ -248,7 +234,7 @@ namespace Net
 			StringBuilder sb = new StringBuilder();
 			sb.Append(v1);
 			sb.Append("len: ").AppendLine(length.ToString());
-			for(int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++)
 			{
 				sb.AppendFormat("{0:X00} ", v2[i]).Append(' ');
 			}

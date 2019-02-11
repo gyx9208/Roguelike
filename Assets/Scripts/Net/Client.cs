@@ -1,5 +1,8 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -17,22 +20,14 @@ using Fundamental;
 
 namespace Net
 {
-	/*
-	 *  定义一些常量
-	 */
 	class ClientDefine
 	{
 		// 接受缓存大小
 		public const int g_recv_buf_size = 65536;
 	}
 
-	/*
-	 *  定义并实现MiClient
-	 */
 	public class Client : ClientInterface
 	{
-
-		// 私有变量
 		private string host_;
 		private ushort port_;
 		private Socket socket_;
@@ -54,7 +49,7 @@ namespace Net
 		private int left_buf_len_;
 		private NetPacket _tempPacket;
 
-		public string Host{ get {return host_; } }
+		public string Host { get { return host_; } }
 		public ushort Port { get { return port_; } }
 
 		private EndPoint _remoteEndPoint;
@@ -76,26 +71,27 @@ namespace Net
 			doCmd_callback_ = null;
 
 			keepalive_time_ms_ = 0;
-			last_keepalive_time_ = DateTime.Now;	// !!! 用本地的 Now 因为 TimeUtil.Now 会被修改，导致 keepalive 不发
+			last_keepalive_time_ = DateTime.Now;    // !!! 用本地的 Now 因为 TimeUtil.Now 会被修改，导致 keepalive 不发
 			keepalive_packet_ = null;
 
 			left_buf_ = new byte[ClientDefine.g_recv_buf_size];
 			left_buf_len_ = 0;
+
 		}
 
 		~Client()
 		{
-			disconnect();
+			Disconnect();
 		}
 		/*
 		 *  建立连接
 		 */
-		public bool connect(string host, ushort port, int timeout_ms = 2000) //以毫秒为单位
+		public bool Connect(string host, ushort port, int timeout_ms = 2000) //以毫秒为单位
 		{
 			try
 			{
 				// 检查是否已经建立连接
-				if (isConnected())
+				if (IsConnected())
 				{
 					SuperDebug.LogWarning(SuperDebug.NETWORK, "client is already connected to " + host_ + ":" + port_ + ", can not connect to other server now.");
 					return false;
@@ -134,7 +130,7 @@ namespace Net
 
 					// 连接
 					timeout_event_.Reset();
-					socket_tmp.BeginConnect(ip_tmp, port_, new AsyncCallback(connectCallback), socket_tmp);
+					socket_tmp.BeginConnect(ip_tmp, port_, new AsyncCallback(ConnectCallback), socket_tmp);
 
 					// 超时等待连接建立
 					timeout_event_.WaitOne(timeout_ms, false);
@@ -168,7 +164,7 @@ namespace Net
 				}
 
 				// 启动工作线程
-				startClientThread();
+				StartClientThread();
 
 				//
 				connected_before_ = true;
@@ -185,7 +181,7 @@ namespace Net
 		/*
 		 *  连接超时回调函数
 		 */
-		private void connectCallback(IAsyncResult asyncresult)
+		private void ConnectCallback(IAsyncResult asyncresult)
 		{
 			try
 			{
@@ -204,10 +200,10 @@ namespace Net
 		/*
 		 *  主动断开连接
 		 */
-		public void disconnect()
+		public void Disconnect()
 		{
 			connected_before_ = false;
-			if (isConnected())
+			if (IsConnected())
 			{
 				SuperDebug.Log(SuperDebug.NETWORK, "disconnect to " + host_ + ":" + port_);
 
@@ -216,7 +212,7 @@ namespace Net
 				{
 					socket_.Close();
 				}
-				
+
 				socket_ = null;
 
 				timeout_event_.Set();
@@ -226,7 +222,7 @@ namespace Net
 		/*
 		 *  判断当前连接是否建立
 		 */
-		public bool isConnected()
+		public bool IsConnected()
 		{
 			if (null == socket_)
 			{
@@ -264,9 +260,9 @@ namespace Net
 		/*
 		 *  同步方式发送一个标准消息包到服务器
 		 */
-		public bool send(NetPacket packet)
+		public bool Send(NetPacket packet)
 		{
-			if (!isConnected())
+			if (!IsConnected())
 			{
 				SuperDebug.LogWarning(SuperDebug.NETWORK, "client is not connected, can not send now.");
 				return false;
@@ -274,7 +270,7 @@ namespace Net
 
 			// 序列化
 			MemoryStream ms = new MemoryStream();
-			packet.serialize(ref ms);
+			packet.Serialize(ref ms);
 
 			// 发送
 			/* fix: ObjectDisposedException: The object was used after being disposed. */
@@ -299,7 +295,7 @@ namespace Net
 				SuperDebug.LogWarning(SuperDebug.NETWORK, "exception e=" + e.ToString());
 				return false;
 			}
-			
+
 			return true;
 		}
 
@@ -307,10 +303,10 @@ namespace Net
 		 *  同步方式接受多个消息
 		 *      如果当前有可读消息，则立刻返回，否则超时等待设置的时间
 		 */
-		private List<NetPacket> recvPacketList()
+		private List<NetPacket> RecvPacketList()
 		{
 			// 检查连接状态
-			if (!isConnected())
+			if (!IsConnected())
 			{
 				SuperDebug.LogWarning(SuperDebug.NETWORK, "client is not connected, can not recv now.");
 				return null;
@@ -323,7 +319,7 @@ namespace Net
 				// 接受到缓存
 				byte[] recv_buf = new byte[ClientDefine.g_recv_buf_size - left_buf_len_];
 				SocketError error = new SocketError();
-				int recv_len = socket_.Receive(recv_buf, 0, recv_buf.Length, SocketFlags.None, out error); 
+				int recv_len = socket_.Receive(recv_buf, 0, recv_buf.Length, SocketFlags.None, out error);
 
 				// 接受超时立刻返回
 				if (error == SocketError.TimedOut
@@ -359,7 +355,7 @@ namespace Net
 					if (_tempPacket == null)
 						_tempPacket = new NetPacket();
 
-					PacketStatus packet_status = _tempPacket.deserialize(ref total_buf, ref used, total_len);
+					PacketStatus packet_status = _tempPacket.Deserialize(ref total_buf, ref used, total_len);
 
 					if (PacketStatus.PACKET_CORRECT != packet_status)
 					{
@@ -385,7 +381,7 @@ namespace Net
 			}
 			catch (SystemException e)
 			{
-				if (isConnected())
+				if (IsConnected())
 				{
 					SuperDebug.LogError(SuperDebug.NETWORK, "recv failed: " + e);
 				}
@@ -396,14 +392,14 @@ namespace Net
 		/*
 		 *  循环接受数据的线程,将收到的packet写入队列
 		 */
-		private void clientProducerThreadHandler()
+		private void ClientProducerThreadHandler()
 		{
 			SuperDebug.Log(SuperDebug.NETWORK, "clientProducer thread start.");
-			while (isConnected())
+			while (IsConnected())
 			{
 				try
 				{
-					List<NetPacket> list = recvPacketList();
+					List<NetPacket> list = RecvPacketList();
 					//MiLog.Log("recv " + list.Count + " packet");
 					if (null != list && 0 != list.Count)
 					{
@@ -421,7 +417,7 @@ namespace Net
 					}
 
 					// 发送心跳包
-					keepalive();
+					KeepAlive();
 				}
 				catch (SystemException e)
 				{
@@ -429,20 +425,21 @@ namespace Net
 				}
 			}
 			// 断开连接
-			disconnect();
+			Disconnect();
 			SuperDebug.Log(SuperDebug.NETWORK, "clientProducer thread stop.");
 		}
 
 		/*
 		 *  循环读取数据的线程, 逐个处理包
+		 *  目前读取在主线程中，而不在网络线程中
 		 */
-		private void clientConsumerThreadHandler()
+		private void ClientConsumerThreadHandler()
 		{
 			SuperDebug.Log(SuperDebug.NETWORK, "clientConsumer thread start.");
-			while (isConnected() || 0 < recv_queue_.Count)
+			while (IsConnected() || 0 < recv_queue_.Count)
 			{
 				// 等待的毫秒数，为 Timeout.Infinite，表示无限期等待。
-				NetPacket packet = recv(Timeout.Infinite);
+				NetPacket packet = Recv(Timeout.Infinite);
 
 				if (packet != null)
 				{
@@ -466,7 +463,7 @@ namespace Net
 		/*
 		 *   从消息队列中读取一个packet
 		 */
-		public NetPacket recv(int timeout_ms = 0)
+		public NetPacket Recv(int timeout_ms = 0)
 		{
 			// 如果队列中有数据，立刻返回，即使连接已经断开
 			lock (recv_queue_)
@@ -478,7 +475,7 @@ namespace Net
 			}
 
 			// 连接状态校验
-			if (!isConnected())
+			if (!IsConnected())
 			{
 				//SuperDebug.LogWarning(SuperDebug.NETWORK, "client is not connected, can not recv now.");
 				return null;
@@ -508,7 +505,7 @@ namespace Net
 		/*
 		 *  判断自动接受数据线程是否启动
 		 */
-		private bool isClientThreadRun()
+		private bool IsClientThreadRun()
 		{
 			return (null != client_producer_thread_ && client_producer_thread_.IsAlive);
 		}
@@ -516,23 +513,23 @@ namespace Net
 		/*
 		 *  启动接受数据的线程
 		 */
-		private bool startClientThread()
+		private bool StartClientThread()
 		{
-			if (isClientThreadRun())
+			if (IsClientThreadRun())
 			{
 				SuperDebug.LogWarning(SuperDebug.NETWORK, "recv thread is already running now, can not restart.");
 				return false;
 			}
-			client_producer_thread_ = new Thread(clientProducerThreadHandler);
+			client_producer_thread_ = new Thread(ClientProducerThreadHandler);
 			client_producer_thread_.Start();
-			
+
 			return true;
 		}
 
 		/*
 		 *  设置连接断开时的回调
 		 */
-		public void setDisconnectCallback(Action callback)
+		public void SetDisconnectCallback(Action callback)
 		{
 			disconnect_callback_ = callback;
 		}
@@ -541,7 +538,7 @@ namespace Net
 		/*
 		 *  设置信息处理的回调
 		 */
-		public void setCmdCallBack(Action<NetPacket> callback)
+		public void SetCmdCallBack(Action<NetPacket> callback)
 		{
 			doCmd_callback_ = callback;
 		}
@@ -549,7 +546,7 @@ namespace Net
 		/*
 		 *  设置心跳包
 		 */
-		public bool setKeepalive(int time_ms, NetPacket packet)
+		public bool SetKeepalive(int time_ms, NetPacket packet)
 		{
 			if (time_ms <= 0 || null == packet)
 			{
@@ -565,7 +562,7 @@ namespace Net
 		/*
 		 *  发送心跳包
 		 */
-		private void keepalive()
+		private void KeepAlive()
 		{
 			if (0 == keepalive_time_ms_ || null == keepalive_packet_)
 			{
@@ -574,7 +571,7 @@ namespace Net
 			TimeSpan time_span = DateTime.Now - last_keepalive_time_;
 			if (time_span.TotalMilliseconds >= keepalive_time_ms_)
 			{
-				send(keepalive_packet_);
+				Send(keepalive_packet_);
 				last_keepalive_time_ = DateTime.Now;
 			}
 
@@ -584,9 +581,11 @@ namespace Net
 
 		public static bool IsIPV6()
 		{
+			/*
 #if UNITY_IPHONE
 			isIPv6 = Dns.GetHostAddresses("www.bh3.com")[0].AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6;
 #endif
+*/
 			return isIPv6;
 		}
 

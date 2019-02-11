@@ -13,7 +13,7 @@ using UnityEngine;
 namespace Net
 {
 	[fiInspectorOnly]
-	[CreateAssetMenu(menuName = "HKMM/Server Info")]
+	[CreateAssetMenu(menuName = "Custom/Server Info")]
 	public class ServerInfo : ScriptableObject
 	{
 		public int Index;
