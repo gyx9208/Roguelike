@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using Fundamental;
 
 namespace UI
 {
@@ -89,19 +89,17 @@ namespace UI
 				return;
 			}
 
-			if (ResourceManager.HasInstance())
+			for (int i = 0; i < lt.Count; ++i)
 			{
-				for (int i = 0; i < lt.Count; ++i)
+				T item = lt[i];
+				if (item == null)
 				{
-					T item = lt[i];
-					if (item == null)
-					{
-						continue;
-					}
-					item.Hide();
-					CGameObjectPool.Instance.RecycleGameObject(lt[i].gameObject);
+					continue;
 				}
+				item.Hide();
+				CGameObjectPool.Instance.RecycleGameObject(lt[i].gameObject);
 			}
+
 			lt.Clear();
 		}
 
@@ -112,24 +110,9 @@ namespace UI
 				return;
 			}
 
-			if (ResourceManager.HasInstance())
-			{
-				item.Hide();
-				CGameObjectPool.Instance.RecycleGameObject(item.gameObject);
-			}
-		}
-
-		public static UIWrapper AddWrapperObject(GameObject go, Transform parent, int offsetSortingOrder = 0, int siblingIndex = -1)
-		{
-			GameObject wrapRoot = GameObject.Instantiate(ResourceManager.Instance.GetGameObject(UIWrapper.GetAssetPath())) as GameObject;
-			wrapRoot.transform.SetParent(parent, false);
-			wrapRoot.transform.localScale = Vector3.one;
-			if (siblingIndex >= 0) wrapRoot.transform.SetSiblingIndex(siblingIndex);
-			UIWrapper uiWrapper = wrapRoot.GetComponent<UIWrapper>();
-			uiWrapper.WrapTarget = go;
-			uiWrapper.OffsetSortingOrder = offsetSortingOrder;
-			UIManager.Instance.RefreshUISortingOrder();
-			return uiWrapper;
+			item.Hide();
+			CGameObjectPool.Instance.RecycleGameObject(item.gameObject);
+			
 		}
 	}
 }

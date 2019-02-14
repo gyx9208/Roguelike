@@ -37,23 +37,14 @@ namespace UI
 
 		private Canvas _rootCanvas;
 		private GameObject _hideRoot;
-		private GameObject _normalLayerRoot;
-		private GameObject _popupLayerRoot;
-		private GameObject _specialLayerRoot;
-		private Vector3 _uiScale = Vector3.one;
-		private Vector2 _uiSizeDelta = DEFAULT_SCREEN_SIZE;
+		private Transform[] _layerRoots;
 
 		private Dictionary<UI_TYPE, BaseUIView> _allUIView;
 		private List<BaseUIView> _backUIViewQueue;
 		private List<BaseUIView> _openUIViewQueue;
 
-		private BaseUIView _topUIView = null;
-
 		public Camera UICamera { get { return _UICamera; } }
 		public Canvas RootCanvas { get { return _rootCanvas; } }
-
-		public CommonDispathcer<EventId> UguiEventDispatcher { get; private set; }
-
 		#region UNITY_FUNTION
 
 		public void Update()
@@ -143,7 +134,7 @@ namespace UI
 			if (!_allUIView.TryGetValue(uiType, out baseUIView))
 			{
 				string uiAssetPath = GetUIAssetPathByUIType(uiType);
-				GameObject goUI = GameObject.Instantiate(ResourceManager.GetInstance().GetResource(uiAssetPath, typeof(GameObject), enResourceType.UIPrefab).Content) as GameObject;
+				GameObject goUI = GameObject.Instantiate(Resources.Load<GameObject>(uiAssetPath));
 				baseUIView = goUI.GetComponent<BaseUIView>();
 				_allUIView.Add(uiType, baseUIView);
 			}
@@ -194,71 +185,8 @@ namespace UI
 			baseUIView.ChangeGraphicRaycasterState(true);
 			RefreshUISortingOrder();
 
-			UguiEventOpenView evt = ClassObjPool<UguiEventOpenView>.Get();
-			evt.uiType = uiType;
-			UguiEventDispatcher.EventDispatch<UguiEventOpenView>(EventId.UGUI_OPEN_VIEW, evt);
-			evt.Release();
-
-			DispatchChangeTopViewEvent();
-
 			return baseUIView;
 		}
-
-		public void DispatchChangeTopViewEvent()
-		{
-			if (_backUIViewQueue.Count > 0 && _backUIViewQueue[_backUIViewQueue.Count - 1] != _topUIView)
-			{
-				_topUIView = _backUIViewQueue[_backUIViewQueue.Count - 1];
-				UguiEventChangeTopView evt = ClassObjPool<UguiEventChangeTopView>.Get();
-				evt.uiView = _topUIView;
-				UguiEventDispatcher.EventDispatch<UguiEventChangeTopView>(EventId.UGUI_CHANGE_TOP_VIEW, evt);
-				evt.Release();
-			}
-		}
-
-		public void PrecacheUIView(UI_TYPE uiType)
-		{
-			string uiAssetPath = GetUIAssetPathByUIType(uiType);
-			LogicGameFramework.Instance.StartCoroutine(ResourceManager.Instance.GetResourceAsync(uiAssetPath, typeof(GameObject), enResourceType.UIPrefab));
-		}
-
-		public void PrecacheUIView(UI_TYPE uiType, CustomAsyncOperation async)
-		{
-			async.AddMission();
-
-			BaseUIView baseUIView = null;
-
-			if (!_allUIView.TryGetValue(uiType, out baseUIView))
-			{
-				LogicGameFramework.Instance.StartCoroutine(EPrecache(uiType, async.FinishMission));
-			}
-			else
-			{
-				async.FinishMission();
-			}
-		}
-
-		private System.Collections.IEnumerator EPrecache(UI_TYPE uiType, Action onFinish)
-		{
-			string uiAssetPath = GetUIAssetPathByUIType(uiType);
-			yield return LogicGameFramework.Instance.StartCoroutine(ResourceManager.Instance.GetResourceAsync(uiAssetPath, typeof(GameObject), enResourceType.UIPrefab));
-			
-			BaseUIView baseUIView = null;
-
-			if (!_allUIView.TryGetValue(uiType, out baseUIView))
-			{
-				GameObject goUI = GameObject.Instantiate(ResourceManager.Instance.GetResource(uiAssetPath, typeof(GameObject), enResourceType.UIPrefab).Content) as GameObject;
-				baseUIView = goUI.GetComponent<BaseUIView>();
-				_allUIView.Add(uiType, baseUIView);
-
-				ChangeUIViewParent(baseUIView, true);
-				baseUIView.PreCache();
-			}
-
-			if (onFinish != null)
-				onFinish();
-		}
-
 
 		public void CloseUIView()
 		{
@@ -280,13 +208,6 @@ namespace UI
 				showUIView.ChangeGraphicRaycasterState(true);
 				showUIView.Back();
 			}
-
-			UguiEventCloseView evt = ClassObjPool<UguiEventCloseView>.Get();
-			evt.uiType = closeUIType;
-			UguiEventDispatcher.EventDispatch<UguiEventCloseView>(EventId.UGUI_CLOSE_VIEW, evt);
-			evt.Release();
-
-			DispatchChangeTopViewEvent();
 		}
 
 		public void CloseUIView(UI_TYPE uiType)
@@ -383,10 +304,6 @@ namespace UI
 			return null;
 		}
 
-		public Vector2 UISizeDelta { get { return _uiSizeDelta; } }
-
-		public Vector3 UIScale { get { return _uiScale; } }
-
 		internal void InitOnEnterBattle()
 		{
 			RefreshUI(SceneManager.GetActiveScene(), LoadSceneMode.Single);
@@ -421,27 +338,6 @@ namespace UI
 			Vector3 uiPos = inLevelUICamera.ScreenToWorldPoint(screenPos);
 			return uiPos;
 		}
-
-		public void SaveOpenUIViewParams(UI_TYPE[] exceptUITypes)
-		{
-			foreach (var uiView in _backUIViewQueue)
-			{
-				if (exceptUITypes == null || System.Array.IndexOf(exceptUITypes, uiView.UIType) < 0)
-				{
-					PlayerDataManager.Instance.SaveOpenUIViewParam(new OpenUIViewParam() { UIType = uiView.UIType, UIParam = uiView.UIParam });
-				}
-			}
-		}
-
-		public void SetChangeLocationStr(int index, string locationStr)
-		{
-			UguiEventChangeLocationStr evt = ClassObjPool<UguiEventChangeLocationStr>.Get();
-			evt.index = index;
-			evt.locationStr = locationStr;
-			UIManager.Instance.UguiEventDispatcher.EventDispatch(EventId.UGUI_CHANGE_LOCATION_STR, evt);
-			evt.Release();
-		}
-
 		#endregion PUBLIC_FUNCTION
 
 		#region PRIVATE_FUNCTION
@@ -477,19 +373,15 @@ namespace UI
 
 		public override void Init()
 		{
-			UguiEventDispatcher = new CommonDispathcer<EventId>();
 			SceneManager.sceneLoaded += RefreshUI;
 
 			RefreshUI(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-
-
 		}
 
 		public override void UnInit()
 		{
 			base.UnInit();
 
-			UguiEventDispatcher = null;
 			Release();
 		}
 
@@ -497,7 +389,6 @@ namespace UI
 		{
 			HideLayer = LayerMask.NameToLayer("Hidden");
 			UILayer = LayerMask.NameToLayer("UI");
-			AvatarLayer = LayerMask.NameToLayer("Avatar");
 
 			if (_allUIView == null)
 			{
@@ -514,7 +405,7 @@ namespace UI
 				_openUIViewQueue = new List<BaseUIView>((int)UI_TYPE.UI_MAX);
 			}
 
-			_UICamera = GameObject.FindGameObjectWithTag("HUDCamera").GetComponent<Camera>();
+			_UICamera = GameObject.Find("HUDCamera").GetComponent<Camera>();
 			
 			InitRoot();
 		}
@@ -528,19 +419,9 @@ namespace UI
 			{
 				baseUIView.transform.SetParent(_hideRoot.transform, false);
 			}
-			else if (baseUIView.UILayer == UI_LAYER.NORMAL && _normalLayerRoot != null)
+			else
 			{
-				baseUIView.transform.SetParent(_normalLayerRoot.transform, false);
-				baseUIView.transform.localPosition = Vector3.zero;
-			}
-			else if (baseUIView.UILayer == UI_LAYER.POPUP && _popupLayerRoot != null)
-			{
-				baseUIView.transform.SetParent(_popupLayerRoot.transform, false);
-				baseUIView.transform.localPosition = Vector3.zero;
-			}
-			else if (baseUIView.UILayer == UI_LAYER.MASK && _specialLayerRoot != null)
-			{
-				baseUIView.transform.SetParent(_specialLayerRoot.transform, false);
+				baseUIView.transform.SetParent(_layerRoots[(int)baseUIView.UILayer], false);
 				baseUIView.transform.localPosition = Vector3.zero;
 			}
 		}
@@ -550,20 +431,19 @@ namespace UI
 			_rootCanvas = _UICamera.transform.Find("UguiCanvas").GetComponent<Canvas>();
 
 			_hideRoot = CreateOrGetSubRoot("HideRoot");
-			_hideRoot.transform.localScale = _uiScale;
+			_hideRoot.transform.localScale = Vector3.one;
 			_hideRoot.transform.localPosition = new Vector3(0, 10000, 0);
 
-			_normalLayerRoot = CreateOrGetSubRoot("NormalLayerRoot");
-			_normalLayerRoot.transform.localScale = _uiScale;
-			_normalLayerRoot.transform.localPosition = Vector3.zero;
+			var list = Enum.GetNames(typeof(UI_LAYER));
+			_layerRoots = new Transform[list.Length];
 
-			_popupLayerRoot = CreateOrGetSubRoot("PopupLayerRoot");
-			_popupLayerRoot.transform.localScale = _uiScale;
-			_popupLayerRoot.transform.localPosition = Vector3.zero;
-
-			_specialLayerRoot = CreateOrGetSubRoot("SpecialLayerRoot");
-			_specialLayerRoot.transform.localScale = _uiScale;
-			_specialLayerRoot.transform.localPosition = Vector3.zero;
+			for(int i = 0; i < list.Length; i++)
+			{
+				var root = CreateOrGetSubRoot(list[i]);
+				root.transform.localScale = Vector3.one;
+				root.transform.localPosition = Vector3.zero;
+				_layerRoots[i] = root.transform;
+			}
 		}
 
 		private GameObject CreateOrGetSubRoot(string name)

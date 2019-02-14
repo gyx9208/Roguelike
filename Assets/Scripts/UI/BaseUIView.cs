@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using Fundamental;
 
 namespace UI
 {
@@ -14,33 +15,35 @@ namespace UI
 
 	public class BaseUIView : BaseUIComponent
 	{
-		[HideInInspector]
+		protected UI_TYPE _uiType = UI_TYPE.UI_NONE;
+		public UI_TYPE UIType
+		{
+			get
+			{
+				return _uiType;
+			}
+			set
+			{
+				_uiType = value;
+			}
+		}
+
 		public UI_LAYER UILayer = UI_LAYER.NORMAL;
-		[HideInInspector]
 		public UI_MODE UIMode = UI_MODE.BACK;
-		[HideInInspector]
-		public UI_MODAL UIModal = UI_MODAL.NONE;
-		[HideInInspector]
-		[Range(0f, 1f)]
-		public float BackGroundAlpha = 0.75f;
-		[HideInInspector]
-		public bool TouchModalBgClose = true;
-		[HideInInspector]
 		public float DestroyExistTime = 300f;
 		[HideInInspector]
 		public Canvas ContentCanvas = null;
-		[HideInInspector]
+
 		public bool IsShowAfterOpenEffect = false;
-		[HideInInspector]
+
 		public bool DeleteOnHide = false;
 
 		protected static readonly string OPEN_EFFECT = "open";
 		private Animator _UIEffectAnimator = null;
 
-		private GameObject _backGround;
 		private Color BlackBGColor = new Color(0f, 0f, 0f, 0.5f);
 
-		protected UI_TYPE _uiType = UI_TYPE.UI_NONE;
+		
 		protected float _destroyTime = 0f;
 		protected bool _isClose = false;
 		protected bool _isInit = false;
@@ -131,7 +134,7 @@ namespace UI
 			_isClose = true;
 			_isInit = false;
 			RemoveEventListener();
-			//EventRouter.Instance.EventDispatch<UI_TYPE>(EventId.UI_CLOSE, _uiType);
+
 			if (onUIHide != null)
 			{
 				onUIHide();
@@ -157,12 +160,6 @@ namespace UI
 		{
 			if (!_isInit)
 			{
-				// 设置content大小 //
-				//InitUISizeDelta();
-
-				// 创建modal //
-				CreateBackGround();
-
 				// 初始化本地化文本 //
 				InitLocalizationText();
 
@@ -202,12 +199,6 @@ namespace UI
 			_isInOpenEffect = false;
 		}
 
-		/*public virtual void InitUISizeDelta()
-		{
-			RectTransform rootCanvasTrans = UIManager.Instance.RootCanvas.GetComponent<RectTransform>();
-			ContentCanvas.GetComponent<RectTransform>().sizeDelta = rootCanvasTrans.sizeDelta;
-		}*/
-
 		/// <summary>
 		/// 关闭界面
 		/// </summary>
@@ -230,20 +221,6 @@ namespace UI
 		{
 
 		}
-
-		public virtual UI.FrontInfoConfigItem GetFrontInfoConfigItem()
-		{
-			return new UI.FrontInfoConfigItem()
-			{
-				enableFunctionButtonView = true,
-				functionButtonViewNames = new string[] { "ButtonBack", "ButtonHome" },
-				enableCoinView = true,
-				coinViewNames = new string[] { "Strength", "FreeCrystal", "PayCrystal" },
-				enableLocationView = true,
-				bgObjName = string.Empty,
-			};
-		}
-
 		#endregion VIRTUAL_FUNCTION
 
 		/// <summary>
@@ -253,11 +230,7 @@ namespace UI
 		public bool IsNeedBack()
 		{
 			// 弹窗view 不需要加入backqueue //
-			if (UILayer == UI_LAYER.POPUP || UILayer == UI_LAYER.SPECIAL)
-			{
-				return false;
-			}
-			else if (UIMode == UI_MODE.NONE)
+			if (UIMode == UI_MODE.NONE)
 			{
 				return false;
 			}
@@ -289,18 +262,6 @@ namespace UI
 			set
 			{
 				_param = value;
-			}
-		}
-
-		public UI_TYPE UIType
-		{
-			get
-			{
-				return _uiType;
-			}
-			set
-			{
-				_uiType = value;
 			}
 		}
 
@@ -353,75 +314,11 @@ namespace UI
 		/// <param name="enable"></param>
 		public void ChangeCameraRenderTexture(bool enable)
 		{
-			List<MonoAvatarRenderTexture> ltAvatarRenderTexture = ListPool<MonoAvatarRenderTexture>.Get();
-			transform.GetComponentsInChildren<MonoAvatarRenderTexture>(true, ltAvatarRenderTexture);
-			for (int i = 0; i < ltAvatarRenderTexture.Count; ++i)
-			{
-				Camera camera = ltAvatarRenderTexture[i].GetRTCamera();
-				if (camera != null)
-				{
-					camera.enabled = enable;
-				}
-			}
-			ListPool<MonoAvatarRenderTexture>.Release(ltAvatarRenderTexture);
-
-			List<MonoMiscShowManager> ltMiscShowManager = ListPool<MonoMiscShowManager>.Get();
-			transform.GetComponentsInChildren<MonoMiscShowManager>(true, ltMiscShowManager);
-			for (int i = 0; i < ltMiscShowManager.Count; ++i)
-			{
-				Camera camera = ltMiscShowManager[i].GetRTCamera();
-				if (camera != null)
-				{
-					camera.enabled = enable;
-				}
-			}
-			ListPool<MonoMiscShowManager>.Release(ltMiscShowManager);
 		}
-
-		#region MODAL BACKGROUND
-		/// <summary>
-		/// 创建模态底
-		/// </summary>
-		private void CreateBackGround()
-		{
-			if (_backGround != null || UIModal == UI_MODAL.NONE)
-				return;
-
-			_backGround = new GameObject("imgModalBg");
-			_backGround.layer = UIManager.UILayer;
-			RectTransform rectTrans = _backGround.AddComponent<RectTransform>();
-			rectTrans.sizeDelta = UIManager.Instance.UISizeDelta + new Vector2(Mathf.Abs(_rightBackgroundStretch - _leftBackgroundStretch), Mathf.Abs(_topBackgroundStretch - _bottomBackgroundStretch));
-			_backGround.transform.SetParent(transform, false);
-			_backGround.transform.SetAsFirstSibling();
-			_backGround.AddComponent<Canvas>();
-			_backGround.AddComponent<GraphicRaycaster>();
-			if (UIModal == UI_MODAL.BACKGROUND)
-			{
-				BlackBGColor.a = BackGroundAlpha;
-				Image imgBG = _backGround.AddComponent<Image>();
-				imgBG.color = BlackBGColor;
-			}
-			else if (UIModal == UI_MODAL.NORMAL)
-			{
-				_backGround.AddComponent<MonoEmptyForRaycast>();
-
-			}
-
-			EventTriggerListener.Get(_backGround).onClick = OnClickBackGround;
-		}
-
-		protected virtual void OnClickBackGround(UIEvent uiEvent)
-		{
-			if (TouchModalBgClose && !_isInOpenEffect)
-			{
-				Close();
-			}
-		}
-		#endregion MODAL BACKGROUND
 
 		protected T LoadUIComponent<T>(string assetPath, Transform trans = null) where T : BaseUIComponent
 		{
-			GameObject go = Instantiate(ResourceManager.GetInstance().GetResource(assetPath, typeof(GameObject), enResourceType.UIPrefab).Content) as GameObject;
+			GameObject go = Instantiate(Resources.Load<GameObject>(assetPath));
 			if (trans == null)
 			{
 				go.transform.SetParent(ContentCanvas.transform);
@@ -445,16 +342,8 @@ namespace UI
 				if (canvas != null && canvas.gameObject != null)
 				{
 					canvas.overrideSorting = true;
-					UIWrapper wrapper = canvas.GetComponent<UIWrapper>();
-					if (wrapper != null && wrapper.gameObject != null)
-					{
-						wrapper.SortingOrder = startOrder;
-						canvas.sortingOrder = wrapper.SortingOrder;
-					}
-					else
-					{
-						canvas.sortingOrder = startOrder;
-					}
+					canvas.sortingOrder = startOrder;
+					
 					++startOrder;
 				}
 			}
@@ -514,15 +403,6 @@ namespace UI
 
 		public void OnValidate()
 		{
-			if (_backGround != null)
-			{
-				BlackBGColor.a = BackGroundAlpha;
-				Image imgBG = _backGround.GetComponent<Image>();
-				if (imgBG != null)
-				{
-					imgBG.color = BlackBGColor;
-				}
-			}
 		}
 #endif
 		#endregion

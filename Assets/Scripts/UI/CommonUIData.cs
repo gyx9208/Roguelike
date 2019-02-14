@@ -6,7 +6,8 @@ namespace UI
 	public enum UI_TYPE : int
 	{
 		UI_NONE = 0,
-		UI_MAX = 1,
+		UI_MAIN = 1,
+		UI_MAX = 2,
 	}
 
 	public class UITypeComparer : IEqualityComparer<UI_TYPE>
@@ -27,6 +28,7 @@ namespace UI
 	{
 		public static readonly Dictionary<UI_TYPE, string> DICT_UI_PATHS = new Dictionary<UI_TYPE, string>(new UITypeComparer())
 		{
+			{ UI_TYPE.UI_MAIN, "UI/MainView"},
 		};
 	}
 }
