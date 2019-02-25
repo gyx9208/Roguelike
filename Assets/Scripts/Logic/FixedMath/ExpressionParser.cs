@@ -25,12 +25,12 @@
  * we use 2point precision, 100*100=100 means 1*1=1
  * * * * * * * * * * * * * */
 
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
 using Fundamental;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
-namespace Logic.EP
+namespace Logic.FixedMath
 {
 	public interface IValue
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Fundamental;
-using Logic.EP;
+using Logic.FixedMath;
 
 namespace Logic.Calculation
 {

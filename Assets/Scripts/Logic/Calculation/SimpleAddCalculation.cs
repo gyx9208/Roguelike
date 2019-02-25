@@ -1,4 +1,4 @@
-﻿using Logic.EP;
+﻿using Logic.FixedMath;
 
 namespace Logic.Calculation
 {
