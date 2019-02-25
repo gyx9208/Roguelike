@@ -396,7 +396,6 @@ namespace Logic.FixedMath
 			return Sqrt(f, numberOfIterations);
 		}
 
-
 		#region Sin
 		public static Fix64 Sin(Fix64 i)
 		{
@@ -441,7 +440,6 @@ namespace Logic.FixedMath
 		4096
 	};
 		#endregion
-
 
 		#region Cos, Tan, Asin
 		public static Fix64 Cos(Fix64 i)
@@ -659,12 +657,12 @@ namespace Logic.FixedMath
 		{
 			return from * (1 - factor) + to * factor;
 		}
-#if _CLIENTLOGIC_
-    public UnityEngine.Vector3 ToVector3()
-    {
-        return new UnityEngine.Vector3((float)x, (float)y, (float)z);
-    }
-#endif
+
+		public UnityEngine.Vector3 ToVector3()
+		{
+			return new UnityEngine.Vector3((float)x, (float)y, (float)z);
+		}
+
 	}
 
 	public struct FixVector2
@@ -822,12 +820,12 @@ namespace Logic.FixedMath
 			return string.Format("x:{0} y:{1}", x, y);
 		}
 
-#if _CLIENTLOGIC_
-    public UnityEngine.Vector2 ToVector2()
-    {
-        return new UnityEngine.Vector2((float)x, (float)y);
-    }
-#endif
+
+		public UnityEngine.Vector2 ToVector2()
+		{
+			return new UnityEngine.Vector2((float)x, (float)y);
+		}
+
 	}
 
 	public struct NormalVector2
@@ -981,12 +979,12 @@ namespace Logic.FixedMath
 			return string.Format("x:{0} y:{1}", x, y);
 		}
 
-#if _CLIENTLOGIC_
-    public UnityEngine.Vector2 ToVector2()
-    {
-        return new UnityEngine.Vector2((float)x, (float)y);
-    }
-#endif
+
+		public UnityEngine.Vector2 ToVector2()
+		{
+			return new UnityEngine.Vector2((float)x, (float)y);
+		}
+
 	}
 
 	public struct IntVector2
@@ -1135,11 +1133,11 @@ namespace Logic.FixedMath
 			return string.Format("x:{0} y:{1}", x, y);
 		}
 
-#if _CLIENTLOGIC_
-    public UnityEngine.Vector2 ToVector2()
-    {
-        return new UnityEngine.Vector2((int)x, (int)y);
-    }
-#endif
+
+		public UnityEngine.Vector2 ToVector2()
+		{
+			return new UnityEngine.Vector2((int)x, (int)y);
+		}
+
 	}
 }
