@@ -12,6 +12,7 @@
 /[Bb]uilds/
 /Assets/AssetStoreTools* 
 /Logs/
+/Design/
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #

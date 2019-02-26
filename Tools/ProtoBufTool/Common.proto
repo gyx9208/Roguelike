@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package Data;
+
+message Ability{
+    int32 Id = 1;
+}
+
+message Character{
+    repeated Ability Abilities = 1;
+}

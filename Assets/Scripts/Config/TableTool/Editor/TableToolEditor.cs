@@ -370,17 +370,7 @@ namespace Config.TableTools
 			List<List<string>> result = new List<List<string>>();
 
 			string[] lines = tableData.Table.text.SplitLine();
-			/*
-			List<string> check = new List<string>(lines[1].SplitStringByTab());
-			if (check.Contains(""))
-			{
-				string utf8Str = CheckFileEncoding(tableData);
-				if (utf8Str != null)
-				{
-					lines = utf8Str.SplitLine();
-				}
-			}
-			*/
+
 			for (int i = 0; i < 4; i++)
 			{
 				result.Add(new List<string>());
