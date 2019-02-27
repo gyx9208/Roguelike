@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Logic.Battle
 {
+
 	public class LevelContext
 	{
-
+		
 	}
 }
