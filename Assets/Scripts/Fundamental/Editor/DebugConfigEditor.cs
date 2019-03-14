@@ -1,18 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
-public class DebugConfigEditor : MonoBehaviour
+namespace Fundamental
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	[CustomEditor(typeof(DebugConfig))]
+	public class DebugConfigEditor : Editor
+	{
+		private SerializedProperty _enable;
+		private SerializedProperty _switch;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+		private void OnEnable()
+		{
+			int count = Enum.GetValues(typeof(DebugPrefix)).Length;
+			DebugConfig config = target as DebugConfig;
+			if (config != null && config.Switch.Length != count)
+			{
+				bool[] newlist = new bool[count];
+				for(int i=0;i<config.Switch.Length && i < count; i++)
+				{
+					newlist[i] = config.Switch[i];
+				}
+				config.Switch = newlist;
+			}
+
+			_enable = serializedObject.FindProperty("Enable");
+			_switch = serializedObject.FindProperty("Switch");
+		}
+		
+		public override void OnInspectorGUI()
+		{
+			EditorGUI.BeginChangeCheck();
+
+			EditorGUILayout.PropertyField(_enable);
+			for(int i = 0; i < _switch.arraySize; i++)
+			{
+				EditorGUILayout.PropertyField(_switch.GetArrayElementAtIndex(i), new GUIContent(((DebugPrefix)i).ToString()));
+			}
+			if (EditorGUI.EndChangeCheck())
+				serializedObject.ApplyModifiedProperties();
+		}
+	}
 }

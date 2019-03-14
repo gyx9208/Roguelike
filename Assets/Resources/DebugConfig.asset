@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DebugConfig
   m_EditorClassIdentifier: 
   Enable: 1
-  Switch: 000001
+  Switch: 000000
