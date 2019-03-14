@@ -49,7 +49,7 @@ namespace Net
 			ushort resCmdID;
 			if (!_typeMap.TryGetValue(type, out resCmdID))
 			{
-				SuperDebug.Warning("undefined type=" + type);
+				SuperDebug.LogWarning(DebugPrefix.Network, "undefined type=" + type);
 			}
 
 			return resCmdID;
@@ -60,7 +60,7 @@ namespace Net
 			Type resType;
 			if (!_cmdIDMap.TryGetValue(cmdID, out resType))
 			{
-				SuperDebug.Warning("undefined cmdID=" + cmdID);
+				SuperDebug.LogWarning(DebugPrefix.Network, "undefined cmdID=" + cmdID);
 			}
 
 			return resType;

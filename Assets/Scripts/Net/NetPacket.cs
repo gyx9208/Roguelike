@@ -98,7 +98,7 @@ namespace Net
 			}
 			catch (System.Exception e)
 			{
-				SuperDebug.LogError(SuperDebug.NETWORK, "Deserialize meet exception " + e);
+				SuperDebug.LogError(DebugPrefix.Network, "Deserialize meet exception " + e);
 				OutputBytes("error buf:", _bodyMem.GetBuffer(), _bodyMem.Length);
 			}
 		}
@@ -142,7 +142,7 @@ namespace Net
 			}
 			catch (System.Exception e)
 			{
-				SuperDebug.LogWarning(SuperDebug.NETWORK, "Serialize " + typeof(T).ToString() + " meet exception " + e);
+				SuperDebug.LogWarning(DebugPrefix.Network, "Serialize " + typeof(T).ToString() + " meet exception " + e);
 				return false;
 			}
 

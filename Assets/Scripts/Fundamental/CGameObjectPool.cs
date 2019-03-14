@@ -424,7 +424,7 @@ namespace Fundamental
 			GameObject prefabObj = Resources.Load<GameObject>(prefabFullPath);
 			if (prefabObj == null)
 			{
-				SuperDebug.Error("prefabObj Can Not Be Null " + prefabFullPath);
+				SuperDebug.LogError("prefabObj Can Not Be Null " + prefabFullPath);
 				return null;
 			}
 			GameObject instObj;

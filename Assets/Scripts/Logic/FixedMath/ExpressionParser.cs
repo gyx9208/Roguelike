@@ -422,8 +422,7 @@ namespace Logic.FixedMath
 			get
 			{
 #if UNITY_EDITOR
-				if (SuperDebug.DEBUG_SWITCH[SuperDebug.EXPRESSION])
-					SuperDebug.Log(SuperDebug.EXPRESSION, ToString());
+				SuperDebug.Log(DebugPrefix.Expression, ToString());
 #endif
 				return ExpressionTree.CalValue;
 			}

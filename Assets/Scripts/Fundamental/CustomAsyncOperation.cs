@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.ResourceManagement;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.Util;
 
 namespace Fundamental
 {

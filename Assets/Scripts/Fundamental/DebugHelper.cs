@@ -3,28 +3,30 @@ using UnityEngine;
 
 namespace Fundamental
 {
+	public enum DebugPrefix
+	{
+		Default,
+		Expression,
+		Network
+	}
 
 	public static class SuperDebug
 	{
-		public static bool enableLog = true;
+		static DebugConfig Config;
 
-		public static bool[] DEBUG_SWITCH =
+		public static void LoadConfig()
+		{
+			Config = Resources.Load<DebugConfig>("DebugConfig");
+		}
+
+		public static bool Enable = true;
+
+		public static bool[] Switch =
 		{
 			true,		// Default		0
 			true,		// Expression	1
 			true		// Network		2
-	};
-
-		public static string[] LOG_PREFIX =
-		{
-			"DEFAULT:",
-			"EXPRESSION:",
-			"NETWORK:"
-	};
-
-		public const int DEFAULT = 0;
-		public const int EXPRESSION = 1;
-		public const int NETWORK = 2;
+		};
 
 		public static void Assert(bool InCondition)
 		{
@@ -38,7 +40,7 @@ namespace Fundamental
 
 		public static void Assert(bool InCondition, string InFormat, params object[] InParameters)
 		{
-			if (SuperDebug.enableLog && !InCondition)
+			if (SuperDebug.Enable && !InCondition)
 			{
 				try
 				{
@@ -67,11 +69,11 @@ namespace Fundamental
 					if (text != null)
 					{
 						string str = "Assert failed! " + text;
-						Warning(str);
+						LogWarning(str);
 					}
 					else
 					{
-						Warning("Assert failed!");
+						LogWarning("Assert failed!");
 					}
 				}
 				catch (Exception)
@@ -92,7 +94,7 @@ namespace Fundamental
 
 		public static void AssertThrow(bool InCondition, string InFormat, params object[] InParameters)
 		{
-			if (SuperDebug.enableLog && !InCondition)
+			if (SuperDebug.Enable && !InCondition)
 			{
 				try
 				{
@@ -134,70 +136,70 @@ namespace Fundamental
 			}
 		}
 
-		public static void Log(string str, params object[] InParameters)
-		{
-			if (SuperDebug.enableLog)
-			{
-				try
-				{
-					if (InParameters != null)
-					{
-						str = string.Format(str, InParameters);
-					}
-					str = DateTime.Now.ToString("yyyyMMdd_HHmmss \r\n") + str;
-					Debug.Log(str);
-				}
-				catch (Exception)
-				{
-				}
-			}
-		}
-
 		public static void Log(string str)
 		{
-			SuperDebug.Log(str, null);
+			Log(DebugPrefix.Default, str);
 		}
 
-		public static void LogError(int type, string str)
+		public static void LogError(string str)
 		{
-			if (DEBUG_SWITCH[type])
-			{
-				Error(str);
-			}
+			LogError(DebugPrefix.Default, str);
 		}
 
-		public static void Error(string str)
+		public static void LogWarning(string str)
 		{
-			Debug.LogError(str);
+			LogWarning(DebugPrefix.Default, str);
 		}
 
-		public static void LogWarning(int type, string str)
+		public static void DrawLine(DebugPrefix type, Vector3 start, Vector3 end, Color? color = null, float duration = 1.0f, bool depthTest = true)
 		{
-			if (DEBUG_SWITCH[type])
-			{
-				Warning(str);
-			}
-		}
-
-		public static void Warning(string str)
-		{
-			Debug.LogWarning(str);
-		}
-
-		public static void DrawLine(int type, Vector3 start, Vector3 end, Color? color = null, float duration = 1.0f, bool depthTest = true)
-		{
-			if (DEBUG_SWITCH[type])
+			if (Check(type))
 			{
 				Debug.DrawLine(start, end, color ?? Color.blue, duration, depthTest);
 			}
 		}
 
-		public static void Log(int type, string str)
+		public static void Log(DebugPrefix type, string str)
 		{
-			if (DEBUG_SWITCH[type])
+			if (Check(type))
 			{
-				Log(str);
+				str = type + DateTime.Now.ToString(": yyyyMMdd_HHmmss \r\n") + str;
+				Debug.Log(str);
 			}
+		}
+
+		public static void LogWarning(DebugPrefix type, string str)
+		{
+			if (Check(type))
+			{
+				str = type + DateTime.Now.ToString(": yyyyMMdd_HHmmss \r\n") + str;
+				Debug.LogWarning(str);
+			}
+		}
+
+		public static void LogError(DebugPrefix type, string str)
+		{
+			if (Check(type))
+			{
+				str = type + DateTime.Now.ToString(": yyyyMMdd_HHmmss \r\n") + str;
+				Debug.LogError(str);
+			}
+		}
+
+		static bool Check(DebugPrefix type)
+		{
+			int index = (int)type;
+			if (Config != null)
+			{
+				if (Config.Enable && Config.Switch[index])
+					return true;
+			}
+			else
+			{
+				if (Enable && Switch[index])
+					return true;
+			}
+			return false;
 		}
 	}
 }

@@ -172,7 +172,7 @@ namespace Net
 
 		public void UnexceptedDisconnectCallback()
 		{
-			SuperDebug.Log(SuperDebug.NETWORK, "UnExceptedDisconnectCallback");
+			SuperDebug.Log(DebugPrefix.Network, "UnExceptedDisconnectCallback");
 		}
 
 		/* Login GameServer */
@@ -219,7 +219,7 @@ namespace Net
 				}
 				catch (Exception e)
 				{
-					SuperDebug.Error(e.ToString());
+					SuperDebug.LogError(e.ToString());
 				}
 			}
 		}

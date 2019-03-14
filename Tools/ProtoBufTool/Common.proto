@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package Data;
+package Net;
 
 message Ability{
     int32 Id = 1;
