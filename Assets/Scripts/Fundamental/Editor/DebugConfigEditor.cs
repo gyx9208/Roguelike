@@ -14,14 +14,21 @@ namespace Fundamental
 		{
 			int count = Enum.GetValues(typeof(DebugPrefix)).Length;
 			DebugConfig config = target as DebugConfig;
-			if (config != null && config.Switch.Length != count)
+
+			if (config != null)
 			{
-				bool[] newlist = new bool[count];
-				for(int i=0;i<config.Switch.Length && i < count; i++)
+				if (config.Switch == null)
+					config.Switch = new bool[0];
+
+				if (config.Switch.Length != count)
 				{
-					newlist[i] = config.Switch[i];
+					bool[] newlist = new bool[count];
+					for (int i = 0; i < config.Switch.Length && i < count; i++)
+					{
+						newlist[i] = config.Switch[i];
+					}
+					config.Switch = newlist;
 				}
-				config.Switch = newlist;
 			}
 
 			_enable = serializedObject.FindProperty("Enable");
