@@ -75,9 +75,7 @@ namespace Config.TableTools
 					tempTable = EditorGUILayout.ObjectField("表格:", tempTable, typeof(TextAsset), false) as TextAsset;
 					if (tempTable != null)
 					{
-						string txtPath1 = AssetDatabase.GetAssetPath(tempTable);
-						txtPath1 = txtPath1.Substring(txtPath1.IndexOf("/Data/") + 1);
-						tableData.TablePath = txtPath1.Substring(0, txtPath1.IndexOf('.'));
+						tableData.TablePath = AssetDatabase.GetAssetPath(tempTable);
 					}
 					EditorGUILayout.LabelField("Table path:", tableData.TablePath);
 
@@ -196,7 +194,7 @@ namespace Config.TableTools
 		{
 			string path = tableData.ClassPath;
 			tableData.Cs = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-			tableData.Table = Resources.Load<TextAsset>(tableData.TablePath);
+			tableData.Table = AssetDatabase.LoadAssetAtPath<TextAsset>(tableData.TablePath);
 
 			if (tableData.Cs == null)
 			{
@@ -276,7 +274,7 @@ namespace Config.TableTools
 			//	保存txt文件信息	//
 			string path = tableData.ClassPath;
 			tableData.Cs = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-			tableData.Table = Resources.Load<TextAsset>(tableData.TablePath);
+			tableData.Table = AssetDatabase.LoadAssetAtPath<TextAsset>(tableData.TablePath);
 
 			//	手动添加部分	//
 			List<List<string>> addedText = ReadAddedText(tableData.Cs);

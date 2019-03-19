@@ -1,8 +1,90 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+using System;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Config.TableTools
 {
+	public class LoadTableList<T> : IEnumerator where T : ITableToolData, new()
+	{
+		bool IsDone = false;
+		public T[] Result;
+		public event Action<LoadTableList<T>> Completed;
+
+		public object Current
+		{
+			get
+			{
+				return Result;
+			}
+		}
+
+		public bool MoveNext()
+		{
+			return !IsDone;
+		}
+
+		public void Reset()
+		{
+		}
+
+		public LoadTableList(string path)
+		{
+			var load = Addressables.LoadAsset<TextAsset>(path);
+			load.Completed += LoadCompleted;
+		}
+
+		private void LoadCompleted(IAsyncOperation<TextAsset> obj)
+		{
+			var text = obj.Result.text;
+			Result = TableTool.LoadTable<T>(text);
+			IsDone = true;
+			Completed?.Invoke(this);
+			Addressables.ReleaseAsset(obj.Result);
+		}
+	}
+
+	public class LoadTableDic<TK, T> : IEnumerator where T : ITableToolData, new()
+	{
+		bool IsDone = false;
+		public Dictionary<TK, T> Result;
+		public event Action<LoadTableDic<TK, T>> Completed;
+
+		public object Current
+		{
+			get
+			{
+				return Result;
+			}
+		}
+
+		public bool MoveNext()
+		{
+			return !IsDone;
+		}
+
+		public void Reset()
+		{
+		}
+
+		public LoadTableDic(string path)
+		{
+			var load = Addressables.LoadAsset<TextAsset>(path);
+			load.Completed += LoadCompleted;
+		}
+
+		private void LoadCompleted(IAsyncOperation<TextAsset> obj)
+		{
+			var text = obj.Result.text;
+			Result = TableTool.LoadDictionary<TK, T>(text);
+			IsDone = true;
+			Completed?.Invoke(this);
+			Addressables.ReleaseAsset(obj.Result);
+		}
+	}
+
 	public interface ITableToolData
 	{
 		void SetData(params object[] param);
@@ -59,9 +141,9 @@ namespace Config.TableTools
 			}
 		}
 
-		public static T[] LoadTable<T>() where T : ITableToolData, new()
+		public static T[] LoadTable<T>(string text) where T : ITableToolData, new()
 		{
-			PrepareForLoad<T>();
+			PrepareForLoad<T>(text);
 
 			T[] list = new T[_lines.Length - PARAM_COUNT];
 			Onload onload = (a, b) =>
@@ -74,9 +156,9 @@ namespace Config.TableTools
 			return list;
 		}
 
-		public static Dictionary<TK, T> LoadDictionary<TK, T>() where T : ITableToolData, new()
+		public static Dictionary<TK, T> LoadDictionary<TK, T>(string text) where T : ITableToolData, new()
 		{
-			PrepareForLoad<T>();
+			PrepareForLoad<T>(text);
 			Dictionary<TK, T> dic = new Dictionary<TK, T>();
 			Onload onload = (a, b) =>
 			{
@@ -89,15 +171,16 @@ namespace Config.TableTools
 			return dic;
 		}
 
-		private static void PrepareForLoad<T>()
+		private static void PrepareForLoad<T>(string text)
 		{
 			TableTool.LoadData();
 
 			//	找到记录的数据	//
 			int i = 0;
+			var name = typeof(T).Name;
 			for (i = 0; i < _tableDatas.TableDatas.Count; i++)
 			{
-				if (_tableDatas.TableDatas[i].ClassName.Equals(typeof(T).Name))
+				if (_tableDatas.TableDatas[i].ClassName.Equals(name))
 				{
 					_tableData = _tableDatas.TableDatas[i];
 					break;
@@ -106,12 +189,10 @@ namespace Config.TableTools
 
 			if (_tableData == null)
 			{
-				throw new System.Exception("Can't find Excel File for " + typeof(T).Name);
+				throw new System.Exception("Can't find Excel File for " + name);
 			}
 
-			_textAsset = Resources.Load<TextAsset>(_tableData.TablePath);
-
-			_lines = _textAsset.text.SplitLine();
+			_lines = text.SplitLine();
 
 			//	筛选要读的列	//
 			string[] locate = _lines[PARAM_LOCATE].SplitStringByTab();
