@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Fundamental;
+using Google.Protobuf;
 using System;
 using System.IO;
 using System.Text;
-using Fundamental;
+using UnityEngine;
 
 /*
  *  2015/01/30
@@ -52,7 +53,7 @@ namespace Net
 		private MemoryStream _sessionMem;
 
 		private Net.PacketSession _session;
-		private System.Object _content;
+		private IMessage _content;
 
 		bool _hasHead;
 		int _thisLength;
@@ -90,15 +91,14 @@ namespace Net
 				_sessionMem.Write(sessionBytes, 0, sessionLen);
 				_sessionMem.Position = 0;
 
-				_session = ProtoBuf.Serializer.Deserialize<PacketSession>(_sessionMem);
+				_session = PacketSession.Parser.ParseFrom(_sessionMem);
 
-				Type t = CommandMap.Instance.GetTypeByCmdID(_cmdId);
-
-				_content = ProtoBuf.Serializer.Deserialize(t, _bodyMem);
+				_content = CommandMap.Instance.GetMessageByCmdId(_cmdId);
+				_content.MergeFrom(_bodyMem);
 			}
 			catch (System.Exception e)
 			{
-				SuperDebug.LogError(DebugPrefix.Network, "Deserialize meet exception " + e);
+				SuperDebug.Error(DebugPrefix.Network, "Deserialize meet exception " + e);
 				OutputBytes("error buf:", _bodyMem.GetBuffer(), _bodyMem.Length);
 			}
 		}
@@ -113,7 +113,7 @@ namespace Net
 			return _content;
 		}
 
-		public bool SetData<T>(T data, PacketSession session)
+		public bool SetData<T>(T data, PacketSession session) where T : IMessage
 		{
 			try
 			{
@@ -127,10 +127,10 @@ namespace Net
 				_bodyMem.Write(NetUtils.UshortToBigEndian(_cmdId), 0, NetDefine.CMD_BYTES);
 				_bodyMem.Seek(NetDefine.BODY_HEAD_LEN, SeekOrigin.Begin);
 
-				ProtoBuf.Serializer.Serialize(_bodyMem, session);
+				session.WriteTo(_bodyMem);
 				long sessionPos = _bodyMem.Position;
 
-				ProtoBuf.Serializer.Serialize(_bodyMem, data);
+				data.WriteTo(_bodyMem);
 				long contentPos = _bodyMem.Position;
 
 				_bodyMem.Seek(NetDefine.CMD_BYTES, SeekOrigin.Begin);
@@ -142,7 +142,7 @@ namespace Net
 			}
 			catch (System.Exception e)
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "Serialize " + typeof(T).ToString() + " meet exception " + e);
+				SuperDebug.Warning(DebugPrefix.Network, "Serialize " + typeof(T).ToString() + " meet exception " + e);
 				return false;
 			}
 

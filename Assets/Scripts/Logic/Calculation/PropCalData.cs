@@ -48,7 +48,7 @@ namespace Logic.Calculation
 				}
 			}
 
-			SuperDebug.LogError(propCal + " doesn't exist");
+			SuperDebug.Error(propCal + " doesn't exist");
 			return null;
 		}
 

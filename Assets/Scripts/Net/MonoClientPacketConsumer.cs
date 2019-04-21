@@ -68,10 +68,10 @@ namespace Net
 				/* 检查网络连接状态 */
 				if (CheckReachabilityChange())
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "=========== internetReachability changed to " + netReach);
+					SuperDebug.Warning(DebugPrefix.Network, "=========== internetReachability changed to " + netReach);
 					if (_client.IsConnected())
 					{
-						SuperDebug.LogWarning(DebugPrefix.Network, "=========== disconnect by MonoClientPacketConsumer");
+						SuperDebug.Warning(DebugPrefix.Network, "=========== disconnect by MonoClientPacketConsumer");
 						_client.Disconnect();
 					}
 				}
@@ -157,7 +157,7 @@ namespace Net
 			_timer = 0;
 			_status = Status.WaitingConnect;
 
-			SuperDebug.LogWarning(DebugPrefix.Network, "===========Reconnect");
+			SuperDebug.Warning(DebugPrefix.Network, "===========Reconnect");
 
 			NetworkManager.Instance.LoginGameServer();
 		}

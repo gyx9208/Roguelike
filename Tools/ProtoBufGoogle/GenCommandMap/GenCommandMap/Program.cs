@@ -112,6 +112,7 @@ namespace GenCommandMap
 @"using System.Collections.Generic;
 using System;
 using Google.Protobuf;
+using Fundamental;
 #usingList
 /*  
  *  Generate By Script
@@ -120,7 +121,7 @@ using Google.Protobuf;
  *	Modified by gyx
  */
 
-namespace MoleMole.Net
+namespace Net
 {
 	public class CommandMap : Singleton<CommandMap>
 	{
@@ -159,7 +160,7 @@ namespace MoleMole.Net
 			ushort resCmdID;
 			if (!_typeMap.TryGetValue(type, out resCmdID))
 			{
-				SuperDebug.Warning(""undefined type="" + type);
+				SuperDebug.Warning(DebugPrefix.Network, ""undefined type="" + type);
 			}
 
 			return resCmdID;
@@ -170,7 +171,7 @@ namespace MoleMole.Net
 			Type resType;
 			if (!_cmdIDMap.TryGetValue(cmdID, out resType))
 			{
-				SuperDebug.Warning(""undefined cmdID="" + cmdID);
+				SuperDebug.Warning(DebugPrefix.Network, ""undefined cmdID="" + cmdID);
 			}
 
 			return resType;

@@ -23,10 +23,10 @@ namespace Fundamental
 				}
 				else
 				{
-					SuperDebug.LogError("event id is " + eventId + " d is " + d.Method + " not match ");
+					SuperDebug.Error("event id is " + eventId + " d is " + d.Method + " not match ");
 					foreach (var item in d.GetInvocationList())
 					{
-						SuperDebug.LogError("d invocation is " + item.Method);
+						SuperDebug.Error("d invocation is " + item.Method);
 					}
 				}
 			}
@@ -77,10 +77,10 @@ namespace Fundamental
 				}
 				else
 				{
-					SuperDebug.LogError("event id is " + eventId + " d is " + d.Method + " not match ");
+					SuperDebug.Error("event id is " + eventId + " d is " + d.Method + " not match ");
 					foreach (var item in d.GetInvocationList())
 					{
-						SuperDebug.LogError("d invocation is " + item.Method);
+						SuperDebug.Error("d invocation is " + item.Method);
 					}
 				}
 			}

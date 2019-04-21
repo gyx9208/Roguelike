@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package Net;
+
+message PacketSession{
+    enum PacketType{
+        Post = 0;
+        Notify = 1;
+        Request = 2;
+        Response = 3;
+    }
+    int32 SessionId = 1;
+    PacketType PType = 2;
+    int32 CmdId = 3;
+}
+
+message CommonRsp{
+    enum CmdId{
+        NONE = 0;
+        CMD_ID = 0x1;
+    }
+    bool Success = 1;
+    int32 ErrorCode = 2;
+    string ErrorStr = 3;
+}
+
+message HeartBeat{
+    enum CmdId{
+        NONE = 0;
+         CMD_ID = 0x2;
+    }
+}

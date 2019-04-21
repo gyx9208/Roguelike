@@ -69,11 +69,11 @@ namespace Fundamental
 					if (text != null)
 					{
 						string str = "Assert failed! " + text;
-						LogWarning(str);
+						Warning(str);
 					}
 					else
 					{
-						LogWarning("Assert failed!");
+						Warning("Assert failed!");
 					}
 				}
 				catch (Exception)
@@ -141,14 +141,14 @@ namespace Fundamental
 			Log(DebugPrefix.Default, str);
 		}
 
-		public static void LogError(string str)
+		public static void Error(string str)
 		{
-			LogError(DebugPrefix.Default, str);
+			Error(DebugPrefix.Default, str);
 		}
 
-		public static void LogWarning(string str)
+		public static void Warning(string str)
 		{
-			LogWarning(DebugPrefix.Default, str);
+			Warning(DebugPrefix.Default, str);
 		}
 
 		public static void DrawLine(DebugPrefix type, Vector3 start, Vector3 end, Color? color = null, float duration = 1.0f, bool depthTest = true)
@@ -168,7 +168,7 @@ namespace Fundamental
 			}
 		}
 
-		public static void LogWarning(DebugPrefix type, string str)
+		public static void Warning(DebugPrefix type, string str)
 		{
 			if (Check(type))
 			{
@@ -177,7 +177,7 @@ namespace Fundamental
 			}
 		}
 
-		public static void LogError(DebugPrefix type, string str)
+		public static void Error(DebugPrefix type, string str)
 		{
 			if (Check(type))
 			{

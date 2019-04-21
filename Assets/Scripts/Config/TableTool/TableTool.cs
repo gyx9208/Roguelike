@@ -128,7 +128,6 @@ namespace Config.TableTools
 
 		private static string[] _lines;
 		private static List<int> _needRead;
-		private static TextAsset _textAsset;
 		private static TableToolDatas.TableToolsData _tableData;
 
 		delegate void Onload(int index, object[] data);
@@ -229,7 +228,6 @@ namespace Config.TableTools
 		{
 			_lines = null;
 			_needRead = null;
-			_textAsset = null;
 			_tableData = null;
 		}
 

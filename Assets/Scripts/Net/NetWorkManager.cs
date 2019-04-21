@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IO;
 using Fundamental;
+using Google.Protobuf;
 
 namespace Net
 {
@@ -101,7 +102,7 @@ namespace Net
 			{
 				// set keeplive pack
 				NetPacket pack = new NetPacket();
-				pack.SetData(new HeartBeat(), GetNewSession((ushort)HeartBeat.CmdId.CmdId));
+				pack.SetData(new HeartBeat(), GetNewSession((ushort)HeartBeat.Types.CmdId.CmdId));
 				_client.SetKeepalive(KEEP_ALIVE_INTERVAL, pack);
 
 				_client.SetDisconnectCallback(UnexceptedDisconnectCallback);
@@ -120,7 +121,7 @@ namespace Net
 		}
 
 		/* Send Packet */
-		public bool Post<T>(T data)
+		public bool Post<T>(T data) where T:IMessage
 		{
 			ushort cmdId = CommandMap.Instance.GetCmdIDByType(typeof(T));
 
@@ -131,7 +132,7 @@ namespace Net
 			return true;
 		}
 
-		public bool Request<T>(T data, System.Action<object> callback)
+		public bool Request<T>(T data, System.Action<object> callback) where T : IMessage
 		{
 			ushort cmdId = CommandMap.Instance.GetCmdIDByType(typeof(T));
 
@@ -141,7 +142,7 @@ namespace Net
 			}
 
 			var session = GetNewSession(cmdId);
-			session.PType = PacketSession.PacketType.Request;
+			session.PType = PacketSession.Types.PacketType.Request;
 
 			NetPacket packet = new NetPacket();
 			packet.SetData(data, session);
@@ -209,7 +210,7 @@ namespace Net
 			}
 #endif
 
-			if (session.PType == PacketSession.PacketType.Response)
+			if (session.PType == PacketSession.Types.PacketType.Response)
 			{
 				try
 				{
@@ -219,7 +220,7 @@ namespace Net
 				}
 				catch (Exception e)
 				{
-					SuperDebug.LogError(e.ToString());
+					SuperDebug.Error(e.ToString());
 				}
 			}
 		}

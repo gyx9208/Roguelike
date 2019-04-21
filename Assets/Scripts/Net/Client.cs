@@ -93,7 +93,7 @@ namespace Net
 				// 检查是否已经建立连接
 				if (IsConnected())
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "client is already connected to " + host_ + ":" + port_ + ", can not connect to other server now.");
+					SuperDebug.Warning(DebugPrefix.Network, "client is already connected to " + host_ + ":" + port_ + ", can not connect to other server now.");
 					return false;
 				}
 
@@ -106,7 +106,7 @@ namespace Net
 				IPAddress[] ip_list = Dns.GetHostAddresses(host_);
 				if (0 == ip_list.Length)
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "can not get any ip address from host " + host_);
+					SuperDebug.Warning(DebugPrefix.Network, "can not get any ip address from host " + host_);
 					return false;
 				}
 
@@ -154,7 +154,7 @@ namespace Net
 				// 检查是否成功连接
 				if (null == socket_)
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "connect to " + host_ + ":" + port_ + " failed.");
+					SuperDebug.Warning(DebugPrefix.Network, "connect to " + host_ + ":" + port_ + " failed.");
 					return false;
 				}
 				else
@@ -171,7 +171,7 @@ namespace Net
 			}
 			catch (System.Exception e)
 			{
-				SuperDebug.LogError(DebugPrefix.Network, "connect to " + host + ":" + port + " meet exception " + e.ToString());
+				SuperDebug.Error(DebugPrefix.Network, "connect to " + host + ":" + port + " meet exception " + e.ToString());
 				return false;
 			}
 
@@ -246,7 +246,7 @@ namespace Net
 			// 连接意外断开后，调用用户回调函数
 			if (!res && connected_before_)
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "connect to " + host_ + ":" + port_ + " break down.");
+				SuperDebug.Warning(DebugPrefix.Network, "connect to " + host_ + ":" + port_ + " break down.");
 				connected_before_ = false;
 				if (null != disconnect_callback_)
 				{
@@ -264,7 +264,7 @@ namespace Net
 		{
 			if (!IsConnected())
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "client is not connected, can not send now.");
+				SuperDebug.Warning(DebugPrefix.Network, "client is not connected, can not send now.");
 				return false;
 			}
 
@@ -281,18 +281,18 @@ namespace Net
 				int send_len = socket_.Send(ms.GetBuffer(), 0, (int)ms.Length, SocketFlags.None, out error);
 				if (error != SocketError.Success)
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "send failed: " + error);
+					SuperDebug.Warning(DebugPrefix.Network, "send failed: " + error);
 					return false;
 				}
 				if (send_len != ms.Length)
 				{//???does this happen?
-					SuperDebug.LogWarning(DebugPrefix.Network, "packet_len=" + ms.Length + ", but only send " + send_len);
+					SuperDebug.Warning(DebugPrefix.Network, "packet_len=" + ms.Length + ", but only send " + send_len);
 					return false;
 				}
 			}
 			catch (Exception e)
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "exception e=" + e.ToString());
+				SuperDebug.Warning(DebugPrefix.Network, "exception e=" + e.ToString());
 				return false;
 			}
 
@@ -308,7 +308,7 @@ namespace Net
 			// 检查连接状态
 			if (!IsConnected())
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "client is not connected, can not recv now.");
+				SuperDebug.Warning(DebugPrefix.Network, "client is not connected, can not recv now.");
 				return null;
 			}
 
@@ -332,7 +332,7 @@ namespace Net
 				// 如果接受数据长度为0，则表示连接出现异常，需要立刻使用回调函数通知使用方
 				if (error != SocketError.Success || 0 == recv_len)
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "recv failed with recv_len=" + recv_len + ", error=" + error);
+					SuperDebug.Warning(DebugPrefix.Network, "recv failed with recv_len=" + recv_len + ", error=" + error);
 					socket_.Close();
 					socket_ = null;
 					return list;
@@ -367,7 +367,7 @@ namespace Net
 						}
 						else
 						{
-							SuperDebug.LogWarning(DebugPrefix.Network, "deserialize packet failed. " + packet_status);
+							SuperDebug.Warning(DebugPrefix.Network, "deserialize packet failed. " + packet_status);
 						}
 
 						break;
@@ -383,7 +383,7 @@ namespace Net
 			{
 				if (IsConnected())
 				{
-					SuperDebug.LogError(DebugPrefix.Network, "recv failed: " + e);
+					SuperDebug.Error(DebugPrefix.Network, "recv failed: " + e);
 				}
 			}
 			return list;
@@ -421,7 +421,7 @@ namespace Net
 				}
 				catch (SystemException e)
 				{
-					SuperDebug.LogError(DebugPrefix.Network, e.ToString());
+					SuperDebug.Error(DebugPrefix.Network, e.ToString());
 				}
 			}
 			// 断开连接
@@ -448,7 +448,7 @@ namespace Net
 				}
 				else
 				{
-					SuperDebug.LogWarning(DebugPrefix.Network, "packet = null in clientConsumerThreadHandler");
+					SuperDebug.Warning(DebugPrefix.Network, "packet = null in clientConsumerThreadHandler");
 				}
 			}
 
@@ -517,7 +517,7 @@ namespace Net
 		{
 			if (IsClientThreadRun())
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "recv thread is already running now, can not restart.");
+				SuperDebug.Warning(DebugPrefix.Network, "recv thread is already running now, can not restart.");
 				return false;
 			}
 			client_producer_thread_ = new Thread(ClientProducerThreadHandler);
@@ -550,7 +550,7 @@ namespace Net
 		{
 			if (time_ms <= 0 || null == packet)
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "time_ms<=0 or packet==null");
+				SuperDebug.Warning(DebugPrefix.Network, "time_ms<=0 or packet==null");
 				return false;
 			}
 

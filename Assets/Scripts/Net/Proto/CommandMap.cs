@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System;
+using Google.Protobuf;
 using Fundamental;
 using Net;
 
 /*  
  *  Generate By Script
  *  
+ *		By liu
+ *	Modified by gyx
  */
 
 namespace Net
@@ -37,8 +40,8 @@ namespace Net
 		{
 			Dictionary<ushort, Type> cmdMap = new Dictionary<ushort, Type>();
 			
-			cmdMap.Add((ushort)CommonRsp.CmdId.CmdId, typeof(CommonRsp));
-			cmdMap.Add((ushort)HeartBeat.CmdId.CmdId, typeof(HeartBeat));
+			cmdMap.Add((ushort)CommonRsp.Types.CmdId.CmdId, typeof(CommonRsp));
+			cmdMap.Add((ushort)HeartBeat.Types.CmdId.CmdId, typeof(HeartBeat));
 
 
 			return cmdMap;
@@ -49,7 +52,7 @@ namespace Net
 			ushort resCmdID;
 			if (!_typeMap.TryGetValue(type, out resCmdID))
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "undefined type=" + type);
+				SuperDebug.Warning(DebugPrefix.Network, "undefined type=" + type);
 			}
 
 			return resCmdID;
@@ -60,10 +63,23 @@ namespace Net
 			Type resType;
 			if (!_cmdIDMap.TryGetValue(cmdID, out resType))
 			{
-				SuperDebug.LogWarning(DebugPrefix.Network, "undefined cmdID=" + cmdID);
+				SuperDebug.Warning(DebugPrefix.Network, "undefined cmdID=" + cmdID);
 			}
 
 			return resType;
+		}
+
+		public IMessage GetMessageByCmdId(ushort cmdID)
+		{
+			switch (cmdID)
+			{
+				case 1:
+					return new CommonRsp();
+				case 2:
+					return new HeartBeat();
+
+			}
+			return null;
 		}
 	}
 }
