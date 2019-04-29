@@ -58,7 +58,10 @@ namespace Fundamental
 			add
 			{
 				if (IsDone)
-					DelayedActionManager.AddAction(value, 0, this);
+				{
+					m_completedAction += value;
+					value(this);
+				}
 				else
 					m_completedAction += value;
 			}
@@ -107,10 +110,15 @@ namespace Fundamental
 				m_completedAction?.Invoke(this);
 		}
 
-		public void AddMission<T>(IAsyncOperation<T> asyncOperation)
+		public void AddMission<T>(AsyncOperationHandle<T> asyncOperation)
 		{
 			m_target++;
-			asyncOperation.Completed += FinishMission;
+			asyncOperation.CompletedTypeless += FinishAsync;
+		}
+
+		private void FinishAsync(AsyncOperationHandle obj)
+		{
+			FinishMission(null);
 		}
 
 		public void AddMission(ResourceRequest asyncOperation)

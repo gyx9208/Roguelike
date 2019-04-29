@@ -15,7 +15,7 @@ MonoBehaviour:
   m_GroupName: Built In Data
   m_Data:
     m_SerializedData: []
-  m_GUID: 8aa2e34c66f4aac459078decf328c372
+  m_GUID: 28a116ea67074194a9b20df4fee5bf2a
   m_SerializeEntries:
   - m_GUID: EditorSceneList
     m_Address: EditorSceneList
@@ -29,4 +29,4 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: 4a7a86f821397f846a7653fae6c995b1, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 780abdb06b7788b439bea70c40f67c0d, type: 2}
+    - {fileID: 11400000, guid: 73efc14b783dc1f4bb1ce5567e7d1068, type: 2}

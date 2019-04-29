@@ -108,9 +108,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3637139695311852434}
   - component: {fileID: 3637139695311852397}
-  - component: {fileID: 3637139695311852399}
-  - component: {fileID: 3637139695311852396}
-  - component: {fileID: 3637139695311852435}
   m_Layer: 0
   m_Name: HUDCamera
   m_TagString: Untagged
@@ -146,9 +143,10 @@ Camera:
   m_ClearFlags: 4
   m_BackGroundColor: {r: 0, g: 0.49056602, b: 0.1111379, a: 0}
   m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_GateFitMode: 2
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -176,38 +174,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3637139695311852399
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3637139695311852398}
-  m_Enabled: 1
---- !u!114 &3637139695311852396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3637139695311852398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f442a2b6262930e42bfe41b1bb80d5ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3637139695311852435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3637139695311852398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4761a7f7673efc448afdc212296e2c57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3637139695550282141
 GameObject:
   m_ObjectHideFlags: 0

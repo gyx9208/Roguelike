@@ -24,7 +24,7 @@ namespace Test
 			yield return load;
 			Debug.Log(load.Result.text);
 			//load.Release();
-			Addressables.ReleaseAsset<TextAsset>(load.Result);
+			Addressables.Release<TextAsset>(load.Result);
 		}
 
 		IEnumerator co2()

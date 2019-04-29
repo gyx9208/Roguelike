@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+using Fundamental;
 
 namespace Config.TableTools
 {
@@ -32,17 +31,17 @@ namespace Config.TableTools
 
 		public LoadTableList(string path)
 		{
-			var load = Addressables.LoadAsset<TextAsset>(path);
+			var load = AddResMgr.Instance.GetRes<TextAsset>(path);
 			load.Completed += LoadCompleted;
 		}
 
-		private void LoadCompleted(IAsyncOperation<TextAsset> obj)
+		private void LoadCompleted(UnityEngine.Object obj)
 		{
-			var text = obj.Result.text;
+			var text = (obj as TextAsset).text;
 			Result = TableTool.LoadTable<T>(text);
 			IsDone = true;
 			Completed?.Invoke(this);
-			Addressables.ReleaseAsset(obj.Result);
+			//Addressables.ReleaseAsset(obj.Result);
 		}
 	}
 
@@ -71,17 +70,17 @@ namespace Config.TableTools
 
 		public LoadTableDic(string path)
 		{
-			var load = Addressables.LoadAsset<TextAsset>(path);
+			var load = AddResMgr.Instance.GetRes<TextAsset>(path);
 			load.Completed += LoadCompleted;
 		}
 
-		private void LoadCompleted(IAsyncOperation<TextAsset> obj)
+		private void LoadCompleted(UnityEngine.Object obj)
 		{
-			var text = obj.Result.text;
+			var text = (obj as TextAsset).text;
 			Result = TableTool.LoadDictionary<TK, T>(text);
 			IsDone = true;
 			Completed?.Invoke(this);
-			Addressables.ReleaseAsset(obj.Result);
+
 		}
 	}
 
