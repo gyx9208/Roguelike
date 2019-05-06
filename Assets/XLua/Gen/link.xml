@@ -1,0 +1,16 @@
+﻿
+
+<linker>
+
+	<assembly fullname="UnityEngine.ParticleSystemModule">
+	    <type fullname="UnityEngine.ParticleSystem" preserve="all"/>
+		<type fullname="UnityEngine.ParticleSystem+MinMaxGradient" preserve="all"/>
+		
+	</assembly>
+
+	<assembly fullname="UnityEngine.CoreModule">
+	    <type fullname="UnityEngine.Color" preserve="all"/>
+		
+	</assembly>
+
+</linker>

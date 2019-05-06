@@ -11,7 +11,8 @@ public class TestHotfix : MonoBehaviour
 	public void Start()
 	{
 		var main = ThisParticle.main;
-		main.startColor = new Color(0, 1, 0);
+		var color = new ParticleSystem.MinMaxGradient(new Color(0, 1, 0));
+		main.startColor = color;
 	}
 
 	private void Awake()

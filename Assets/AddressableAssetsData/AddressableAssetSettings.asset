@@ -68,7 +68,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 604b134155e9fd242a1f37cece11cadd, type: 2}
   m_InitializationObjects: []
   m_ActivePlayerDataBuilderIndex: 3
-  m_ActivePlayModeDataBuilderIndex: 0
+  m_ActivePlayModeDataBuilderIndex: 2
   m_DataBuilders:
   - {fileID: 11400000, guid: d03950baec73c7441a1e16e59d179a4a, type: 2}
   - {fileID: 11400000, guid: b0a3458af3014554dbc0a238640de13b, type: 2}

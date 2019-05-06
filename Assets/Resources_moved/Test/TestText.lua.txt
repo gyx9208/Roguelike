@@ -1,0 +1,9 @@
+---[[
+xlua.hotfix(CS.TestHotfix,{
+    Start = function(self)
+        local main = self.ThisParticle.main
+        local color = CS.UnityEngine.ParticleSystem.MinMaxGradient(CS.UnityEngine.Color(1, 0, 1, 0.5))
+        main.startColor = color
+    end;
+})
+--]]

@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/TestXlua.unity
+    guid: d782b0f34e43952438f6a9b5a99da466
+  - enabled: 1
+    path: Assets/Scenes/Particle.unity
+    guid: 855756dae0f92224d8863876d394c417
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 0e91372d298d961458c52f2217133f2d,
       type: 2}
