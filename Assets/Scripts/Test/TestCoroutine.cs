@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -20,7 +20,7 @@ namespace Test
 
 		IEnumerator co4()
 		{
-			var load = Addressables.LoadAsset<TextAsset>("TestText");
+			var load = Addressables.LoadAssetAsync<TextAsset>("TestText");
 			yield return load;
 			Debug.Log(load.Result.text);
 			//load.Release();

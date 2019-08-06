@@ -7,7 +7,6 @@ namespace Config.Data
 	public class SkillFrame
 	{
 		public int FrameIndex;
-		public int AttackValue;
 	}
 
 	[CreateAssetMenu(menuName = "Custom/Design/Skill")]

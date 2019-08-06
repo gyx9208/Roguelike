@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System;
@@ -15,7 +15,7 @@ namespace Config.TableTools
 
 		private Vector2 _scrollPosition = Vector2.zero;
 
-		[MenuItem("miHoYo/Utils/表格代码生成器 &r")]
+		[MenuItem("Custom/Utils/表格代码生成器 &r")]
 		static void Init()
 		{
 			LoadAsset();

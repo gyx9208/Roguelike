@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -7,21 +6,21 @@ using XLua;
 
 public class LoadHotfix : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+	// Start is called before the first frame update
+	void Start()
+	{
 		StartCoroutine(Load());
-    }
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	// Update is called once per frame
+	void Update()
+	{
+
+	}
 
 	IEnumerator Load()
 	{
-		var hotfix = Addressables.LoadAsset<TextAsset>("hotfix");
+		var hotfix = Addressables.LoadAssetAsync<TextAsset>("hotfix");
 		yield return hotfix;
 		LuaEnv luaenv = new LuaEnv();
 

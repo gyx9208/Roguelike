@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Fundamental
 {
@@ -60,7 +61,7 @@ namespace Fundamental
 				AddRes addres = new AddRes();
 				_Cache[addPath] = addres;
 
-				var load = Addressables.LoadAsset<T>(addPath);
+				var load = Addressables.LoadAssetAsync<T>(addPath);
 				yield return load;
 
 				addres.OnLoad(load);
@@ -88,7 +89,7 @@ namespace Fundamental
 				AddRes addres = new AddRes();
 				_Cache[addPath] = addres;
 
-				var load = Addressables.LoadAsset<T>(addPath);
+				var load = Addressables.LoadAssetAsync<T>(addPath);
 				load.Completed += addres.OnLoad<T>;
 
 				return addres;

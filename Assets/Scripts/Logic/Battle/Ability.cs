@@ -8,5 +8,6 @@ namespace Logic.Battle
 {
 	public class Ability
 	{
+
 	}
 }
