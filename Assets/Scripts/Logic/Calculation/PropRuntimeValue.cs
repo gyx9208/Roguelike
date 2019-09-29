@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using Logic.LockStep;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Logic.Calculation
 {
@@ -21,7 +22,7 @@ namespace Logic.Calculation
 
 		public event RuntimeValueChangedDelegate onCurrentValueChanged;
 
-		public ValueCup(int value, int maxValue, ChangeCup changeCup,int min)
+		public ValueCup(int value, int maxValue, ChangeCup changeCup, int min)
 		{
 			_changeCup = changeCup;
 
@@ -130,7 +131,7 @@ namespace Logic.Calculation
 		{
 			get
 			{
-				return LiteralValue * InLevelData.DECIMAL_PRECISION / _maxValue;
+				return LiteralValue * LockStepConst.DECIMAL_PRECISION / _maxValue;
 			}
 		}
 	}
@@ -169,7 +170,7 @@ namespace Logic.Calculation
 
 		public int GetCalValue(int propValue)
 		{
-			return GetLiteralValue(propValue) * InLevelData.DECIMAL_PRECISION;
+			return GetLiteralValue(propValue) * LockStepConst.DECIMAL_PRECISION;
 		}
 
 		public int ChangeValue(int propValue, int changedValue)
@@ -216,7 +217,7 @@ namespace Logic.Calculation
 
 		public int GetCalMaxValue(int prop)
 		{
-			return GetMaxValue(prop) * InLevelData.DECIMAL_PRECISION;
+			return GetMaxValue(prop) * LockStepConst.DECIMAL_PRECISION;
 		}
 
 		public void SetMaxValue(int propValue, int maxValue)

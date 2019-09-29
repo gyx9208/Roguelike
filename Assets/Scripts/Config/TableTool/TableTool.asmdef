@@ -1,0 +1,16 @@
+{
+    "name": "TableTool",
+    "references": [
+        "GUID:9a8a29828f0a3a841b5f2fd0ab058675",
+        "GUID:486e66bf2df952e44adc4bd80a63a10e"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

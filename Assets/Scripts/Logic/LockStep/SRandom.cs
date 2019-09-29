@@ -1,14 +1,5 @@
-﻿//
-// @brief: 自定义随机数
-// @version: 1.0.0
-// @author helin
-// @date: 03/7/2018
-// 
-// 
-//
-
-using System;
-namespace Logic.FixedMath
+﻿ using System;
+namespace Logic.LockStep
 {
 	public class SRandom
 	{

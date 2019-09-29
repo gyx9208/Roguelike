@@ -25,12 +25,11 @@
  * we use 2point precision, 100*100=100 means 1*1=1
  * * * * * * * * * * * * * */
 
-using Fundamental;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Logic.FixedMath
+namespace Logic.LockStep
 {
 	public interface IValue
 	{
@@ -52,7 +51,7 @@ namespace Logic.FixedMath
 
 		public override string ToString()
 		{
-			return "" + (float)m_Value / InLevelData.DECIMAL_PRECISION + "";
+			return "" + (float)m_Value / LockStepConst.DECIMAL_PRECISION + "";
 		}
 	}
 	public class OperationSum : IValue
@@ -86,7 +85,7 @@ namespace Logic.FixedMath
 		private IValue[] m_Values;
 		public int CalValue
 		{
-			get { return m_Values.Select(v => v.CalValue).Aggregate((v1, v2) => v1 * v2 / InLevelData.DECIMAL_PRECISION); }
+			get { return m_Values.Select(v => v.CalValue).Aggregate((v1, v2) => v1 * v2 / LockStepConst.DECIMAL_PRECISION); }
 		}
 		public OperationProduct(params IValue[] aValues)
 		{
@@ -141,7 +140,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return InLevelData.DECIMAL_PRECISION * m_Value1.CalValue / m_Value2.CalValue; }
+			get { return LockStepConst.DECIMAL_PRECISION * m_Value1.CalValue / m_Value2.CalValue; }
 		}
 		public OperationReciprocal(IValue v1, IValue v2)
 		{
@@ -197,7 +196,7 @@ namespace Logic.FixedMath
 		{
 			if (m_Params == null)
 				return m_Name;
-			return m_Name + "(" + string.Join(", ", m_Params.Select(v => v.ToString()).ToArray()) + ")[" + (float)CalValue / InLevelData.DECIMAL_PRECISION + "]";
+			return m_Name + "(" + string.Join(", ", m_Params.Select(v => v.ToString()).ToArray()) + ")[" + (float)CalValue / LockStepConst.DECIMAL_PRECISION + "]";
 		}
 	}
 
@@ -217,7 +216,7 @@ namespace Logic.FixedMath
 
 		public override string ToString()
 		{
-			return _NameSpace + "." + _Function + "(" + string.Join(", ", _Params.Select(v => v.ToString()).ToArray()) + ")[" + (float)CalValue / InLevelData.DECIMAL_PRECISION + "]";
+			return _NameSpace + "." + _Function + "(" + string.Join(", ", _Params.Select(v => v.ToString()).ToArray()) + ")[" + (float)CalValue / LockStepConst.DECIMAL_PRECISION + "]";
 		}
 
 		public NamespacedFunction(string f, Expression expression, params IValue[] aValues)
@@ -260,7 +259,7 @@ namespace Logic.FixedMath
 
 		public override string ToString()
 		{
-			return _NameSpace + "." + _Parameter + "[" + (float)CalValue / InLevelData.DECIMAL_PRECISION + "]";
+			return _NameSpace + "." + _Parameter + "[" + (float)CalValue / LockStepConst.DECIMAL_PRECISION + "]";
 		}
 		public Parameter(string aName, Expression expression)
 		{
@@ -291,7 +290,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return m_Value1.CalValue > m_Value2.CalValue ? InLevelData.DECIMAL_PRECISION : 0; }
+			get { return m_Value1.CalValue > m_Value2.CalValue ? LockStepConst.DECIMAL_PRECISION : 0; }
 		}
 		public OperationMoreThan(IValue v1, IValue v2)
 		{
@@ -309,7 +308,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return m_Value1.CalValue >= m_Value2.CalValue ? InLevelData.DECIMAL_PRECISION : 0; }
+			get { return m_Value1.CalValue >= m_Value2.CalValue ? LockStepConst.DECIMAL_PRECISION : 0; }
 		}
 		public OperationMoreThanEqual(IValue v1, IValue v2)
 		{
@@ -327,7 +326,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return m_Value1.CalValue < m_Value2.CalValue ? InLevelData.DECIMAL_PRECISION : 0; }
+			get { return m_Value1.CalValue < m_Value2.CalValue ? LockStepConst.DECIMAL_PRECISION : 0; }
 		}
 		public OperationLessThan(IValue v1, IValue v2)
 		{
@@ -345,7 +344,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return m_Value1.CalValue <= m_Value2.CalValue ? InLevelData.DECIMAL_PRECISION : 0; }
+			get { return m_Value1.CalValue <= m_Value2.CalValue ? LockStepConst.DECIMAL_PRECISION : 0; }
 		}
 		public OperationLessThanEqual(IValue v1, IValue v2)
 		{
@@ -363,7 +362,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return m_Value1.CalValue == m_Value2.CalValue ? InLevelData.DECIMAL_PRECISION : 0; }
+			get { return m_Value1.CalValue == m_Value2.CalValue ? LockStepConst.DECIMAL_PRECISION : 0; }
 		}
 		public OperationEqual(IValue v1, IValue v2)
 		{
@@ -381,7 +380,7 @@ namespace Logic.FixedMath
 		private IValue m_Value1, m_Value2;
 		public int CalValue
 		{
-			get { return m_Value1.CalValue != m_Value2.CalValue ? InLevelData.DECIMAL_PRECISION : 0; }
+			get { return m_Value1.CalValue != m_Value2.CalValue ? LockStepConst.DECIMAL_PRECISION : 0; }
 		}
 		public OperationNotEqual(IValue v1, IValue v2)
 		{
@@ -422,7 +421,7 @@ namespace Logic.FixedMath
 			get
 			{
 #if UNITY_EDITOR
-				SuperDebug.Log(DebugPrefix.Expression, ToString());
+				//Debug.Log(ToString());
 #endif
 				return ExpressionTree.CalValue;
 			}
@@ -430,7 +429,7 @@ namespace Logic.FixedMath
 
 		public int Value
 		{
-			get { return CalValue / InLevelData.DECIMAL_PRECISION; }
+			get { return CalValue / LockStepConst.DECIMAL_PRECISION; }
 		}
 		/*
 		public int[] MultiValue
@@ -457,7 +456,7 @@ namespace Logic.FixedMath
 		{
 			if (Parameters.ContainsKey(p))
 			{
-				Parameters[p].CalValue = value * InLevelData.DECIMAL_PRECISION;
+				Parameters[p].CalValue = value * LockStepConst.DECIMAL_PRECISION;
 			}
 		}
 		public void SetParameterCalValue(string p, int calvalue)
@@ -551,7 +550,7 @@ namespace Logic.FixedMath
 	public delegate int[] MultiResultDelegate(params int[] aParams);
 	public delegate int ParameterDelegate(string s1, string s2);
 
-	public class ExpressionParser : Singleton<ExpressionParser>
+	public class ExpressionParser
 	{
 		private List<string> m_BracketHeap = new List<string>();
 		private Dictionary<string, System.Func<int>> m_Consts = new Dictionary<string, System.Func<int>>();
@@ -597,11 +596,6 @@ namespace Logic.FixedMath
 					return rnd.NextDouble() * p[0];
 				return rnd.NextDouble();
 			});*/
-		}
-
-		public override void Init()
-		{
-			base.Init();
 		}
 
 		public void AddFunc(string aName, System.Func<int[], int> aMethod)
@@ -874,7 +868,7 @@ namespace Logic.FixedMath
 			}
 
 			int intValue;
-			if (InLevelData.TryParseInLevelInt(aExpression, out intValue))
+			if (LockStepConst.TryParseInLevelInt(aExpression, out intValue))
 			{
 				return new Number(intValue);
 			}

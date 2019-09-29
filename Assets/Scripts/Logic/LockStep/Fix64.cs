@@ -1,18 +1,8 @@
-﻿//
-// @brief: 定点数
-// @version: 1.0.0
-// @author helin
-// @date: 03/7/2018
-// 
-// 
-//
+﻿using System;
 
-using System;
-
-namespace Logic.FixedMath
+namespace Logic.LockStep
 {
-
-	public partial struct Fix64 : IEquatable<Fix64>, IComparable<Fix64>
+	public struct Fix64 : IEquatable<Fix64>, IComparable<Fix64>
 	{
 		readonly long m_rawValue;
 
@@ -22,8 +12,11 @@ namespace Logic.FixedMath
 		public static readonly Fix64 PI = new Fix64(Pi);
 		public static readonly Fix64 PITimes2 = new Fix64(PiTimes2);
 		public static readonly Fix64 PIOver180 = new Fix64((long)72);
-		public static readonly Fix64 Rad2Deg = Fix64.Pi * (Fix64)2 / (Fix64)360;
-		public static readonly Fix64 Deg2Rad = (Fix64)360 / (Fix64.Pi * (Fix64)2);
+		public static readonly Fix64 Rad2Deg = (Fix64)360 / (Fix64.Pi * (Fix64)2);
+		public static readonly Fix64 Deg2Rad = Fix64.Pi * (Fix64)2 / (Fix64)360;
+		public static readonly Fix64 I360 = new Fix64(360);
+		public static readonly Fix64 I180 = new Fix64(180);
+		public static readonly Fix64 IM180 = new Fix64(-180);
 
 		const long Pi = 12868;
 		const long PiTimes2 = 25736;
@@ -496,6 +489,27 @@ namespace Logic.FixedMath
 				result = (F1 >= (Fix64)0 ? PI : -PI) / (Fix64)2;
 
 			return result;
+		}
+		#endregion
+
+		public static Fix64 Min(Fix64 a, Fix64 b)
+		{
+			if (a < b)
+				return a;
+			else
+				return b; 
+		}
+	}
+
+	public static class Fix64Extension
+	{
+		#region Angle
+		public static Fix64 ClampAngle(this Fix64 i)
+		{
+			for (; i < Fix64.Zero; i += Fix64.I360) ;
+			if (i > Fix64.I360)
+				i %= Fix64.I360;
+			return i;
 		}
 		#endregion
 	}
@@ -991,8 +1005,6 @@ namespace Logic.FixedMath
 	{
 		public int x;
 		public int y;
-
-
 
 		public IntVector2(int x, int y)
 		{

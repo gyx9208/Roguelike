@@ -1,0 +1,15 @@
+{
+    "name": "LockStep",
+    "references": [
+        "GUID:9a8a29828f0a3a841b5f2fd0ab058675"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

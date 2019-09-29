@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
+﻿using Fundamental;
+using Logic.LockStep;
 using System;
-using Fundamental;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Config.TableTools
 {
@@ -97,7 +98,7 @@ namespace Config.TableTools
 		public const string WINDOWS_ENTER = "\r\n";
 
 		public static readonly string[] STRING_SPLITS = new string[3] { ";", "；", "|" };
-		public static readonly string[] STRING_SUB_SPLITS = new string[1] { ","};
+		public static readonly string[] STRING_SUB_SPLITS = new string[1] { "," };
 		public static readonly string[] LINE_SPLITS = new string[3] { WINDOWS_ENTER, CARRIAGE_RETURN, LINE_FEED };
 		public static readonly string[] TAB_SPLITS = new string[1] { TAB };
 
@@ -242,7 +243,7 @@ namespace Config.TableTools
 			{
 				if (string.IsNullOrEmpty(str))
 					return 0;
-				return InLevelData.ParseInLevelInt(str);
+				return LockStepConst.ParseInLevelInt(str);
 			}
 			else if (FLOAT.Equals(type))
 			{
@@ -254,7 +255,7 @@ namespace Config.TableTools
 			{
 				return str;
 			}
-			else if (BOOL.Equals(type))
+			else if (BOOL.Equals(type)) 
 			{
 				return "true".Equals(str.ToLower());
 			}
@@ -280,7 +281,7 @@ namespace Config.TableTools
 					if (string.IsNullOrEmpty(str))
 						result.Add(0);
 					else
-						result.Add(InLevelData.ParseInLevelInt(p[i]));
+						result.Add(LockStepConst.ParseInLevelInt(p[i]));
 				}
 				return result;
 			}

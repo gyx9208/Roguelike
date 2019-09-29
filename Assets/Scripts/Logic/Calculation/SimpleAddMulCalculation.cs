@@ -1,4 +1,4 @@
-﻿using Logic.FixedMath;
+﻿using Logic.LockStep;
 
 namespace Logic.Calculation
 {
@@ -27,14 +27,14 @@ namespace Logic.Calculation
 		protected override void Init()
 		{
 			_valueDict[BASE_ADD] = 0;
-			_valueDict[BASE_MUL] = InLevelData.DECIMAL_PRECISION;
+			_valueDict[BASE_MUL] = LockStepConst.DECIMAL_PRECISION;
 		}
 
 		public override int GetCalResult()
 		{
 			int result = _baseValue;
 			result += _valueDict[BASE_ADD];
-			result = result * _valueDict[BASE_MUL] / InLevelData.DECIMAL_PRECISION;
+			result = result * _valueDict[BASE_MUL] / LockStepConst.DECIMAL_PRECISION;
 
 			return result;
 		}
@@ -43,7 +43,7 @@ namespace Logic.Calculation
 		{
 			int result = _baseValue;
 			result += GetOneKeySum(BASE_ADD, context);
-			result = result * GetOneKeySum(BASE_MUL, context) / InLevelData.DECIMAL_PRECISION;
+			result = result * GetOneKeySum(BASE_MUL, context) / LockStepConst.DECIMAL_PRECISION;
 
 			return result;
 		}

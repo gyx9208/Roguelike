@@ -1,5 +1,4 @@
-﻿using Logic.FixedMath;
-
+﻿using Logic.LockStep;
 
 namespace Logic.Calculation
 {
@@ -20,7 +19,7 @@ namespace Logic.Calculation
 		public override int GetCalResult()
 		{
 			int result = _baseValue;
-			result = result * _valueDict[DEFAULT_KEY] / InLevelData.DECIMAL_PRECISION;
+			result = result * _valueDict[DEFAULT_KEY] / LockStepConst.DECIMAL_PRECISION;
 
 			return result;
 		}
@@ -28,7 +27,7 @@ namespace Logic.Calculation
 		public override int GetCalResult(ExpressionContext context)
 		{
 			int result = _baseValue;
-			result = result * GetOneKeySum(DEFAULT_KEY, context) / InLevelData.DECIMAL_PRECISION;
+			result = result * GetOneKeySum(DEFAULT_KEY, context) / LockStepConst.DECIMAL_PRECISION;
 
 			return result;
 		}

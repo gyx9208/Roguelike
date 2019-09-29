@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Logic.FixedMath;
+using Logic.LockStep;
 
 namespace Logic.Calculation
 {
@@ -77,14 +77,14 @@ namespace Logic.Calculation
 		/// <returns></returns>
 		public int GetResult()
 		{
-			return GetCalResult() / InLevelData.DECIMAL_PRECISION;
+			return GetCalResult() / LockStepConst.DECIMAL_PRECISION;
 		}
 
 		public abstract int GetCalResult(ExpressionContext context);
 
 		public int GetResult(ExpressionContext context)
 		{
-			return GetCalResult(context) / InLevelData.DECIMAL_PRECISION;
+			return GetCalResult(context) / LockStepConst.DECIMAL_PRECISION;
 		}
 
 		protected int GetOneKeySum(int key, ExpressionContext context)
